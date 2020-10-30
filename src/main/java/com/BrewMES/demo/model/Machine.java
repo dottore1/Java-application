@@ -1,4 +1,4 @@
-package com.BrewMES.demo;
+package com.BrewMES.demo.model;
 
 public class Machine {
     private int id;

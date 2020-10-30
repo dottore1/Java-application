@@ -1,6 +1,4 @@
-package com.BrewMES.demo;
-
-import org.apache.tomcat.jni.Local;
+package com.BrewMES.demo.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
