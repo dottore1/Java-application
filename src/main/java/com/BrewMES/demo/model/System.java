@@ -61,10 +61,6 @@ public class System implements iSystem {
 		return latestBatches;
 	}
 
-	public void setCurrentMachine(Machine currentMachine) {
-		this.currentMachine = currentMachine;
-	}
-
 	public void setSelectedBatch(Batch selectedBatch) {
 		this.selectedBatch = selectedBatch;
 	}
