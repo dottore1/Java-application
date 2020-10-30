@@ -1,5 +1,10 @@
 package com.BrewMES.demo.model;
 
+import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
+import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
+import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
+import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +40,28 @@ public class BrewMES implements iBrewMES {
 	}
 
 	public void connectMachine(String ipAddress) {
+		try {
+			//get all endpoints from the machine
+			List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(ipAddress).get();
+
+			//loading endpoints into configuration
+			OpcUaClientConfigBuilder cfg = new OpcUaClientConfigBuilder();
+			cfg.setEndpoint(endpoints.get(0));
+
+			//setting up machine client with config
+			OpcUaClient connection = OpcUaClient.create(cfg.build());
+
+			//connecting machine
+			connection.connect().get();
+			Machine newMachine = new Machine(ipAddress, connection);
+			machines.put(newMachine.getId(), newMachine);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if (machines.size() == 0) {
 			machines = new HashMap<>();
 		}
-		Machine newMachine = new Machine(ipAddress);
-		machines.put(newMachine.getId, newMachine);
+
 	}
 
 	public void disconnectMachine(int id) {
