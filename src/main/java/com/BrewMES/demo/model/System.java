@@ -44,4 +44,33 @@ public class System implements iSystem {
 		throw new UnsupportedOperationException();
 	}
 
+
+	public List<Machine> getMachines() {
+		return machines;
+	}
+
+	public Machine getCurrentMachine() {
+		return currentMachine;
+	}
+
+	public Batch getSelectedBatch() {
+		return selectedBatch;
+	}
+
+	public List<Batch> getLatestBatches() {
+		return latestBatches;
+	}
+
+	public void setCurrentMachine(Machine currentMachine) {
+		this.currentMachine = currentMachine;
+	}
+
+	public void setSelectedBatch(Batch selectedBatch) {
+		this.selectedBatch = selectedBatch;
+	}
+
+	public void setLatestBatches(List<Batch> latestBatches) {
+		this.latestBatches = latestBatches;
+	}
 }
+
