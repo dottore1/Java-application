@@ -1,4 +1,4 @@
-package com.BrewMES.demo;
+package com.BrewMES.demo.model;
 
 enum BeerType {
 	PILSNER,
