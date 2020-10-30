@@ -13,6 +13,10 @@ public class Machine {
     private double vibration;
     private double humidity;
 
+    public Machine(String ipAddress) {
+        this.ip = ipAddress;
+    }
+
     public void controlMachine(Command command) {
         throw new UnsupportedOperationException();
     }
