@@ -15,6 +15,7 @@ public class BrewMES implements iBrewMES {
 	private Batch selectedBatch;
 	private List<Batch> latestBatches;
 
+
 	public static void main(String[] args) {
 		throw new UnsupportedOperationException();
 	}
@@ -27,6 +28,7 @@ public class BrewMES implements iBrewMES {
 	// picks based on MachineId
 	public void setCurrentMachine(int machineId) {
 		this.currentMachine = machines.get(machineId);
+
 	}
 
 	public Batch getBatch(int id) {
