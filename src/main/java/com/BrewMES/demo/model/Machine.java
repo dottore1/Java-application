@@ -1,5 +1,7 @@
 package com.BrewMES.demo.model;
 
+import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
+
 public class Machine {
     private int id;
     private String ip;
@@ -12,6 +14,12 @@ public class Machine {
     private double temperature;
     private double vibration;
     private double humidity;
+    private OpcUaClient connection;
+
+    public Machine(String ipAddress,OpcUaClient connection) {
+        this.ip = ipAddress;
+        this.connection = connection;
+    }
 
     public void controlMachine(Command command) {
         throw new UnsupportedOperationException();

@@ -1,5 +1,10 @@
 package com.BrewMES.demo.model;
 
+import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
+import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
+import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
+import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
+import java.util.ArrayList;
 import java.util.List;
 
 public class System implements iSystem {
@@ -25,7 +30,25 @@ public class System implements iSystem {
 	}
 
 	public void connectMachine(String ipAddress) {
-		throw new UnsupportedOperationException();
+		try {
+			//get all endpoints from the machine
+			List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(ipAddress).get();
+
+			//loading endpoints into configuration
+			OpcUaClientConfigBuilder cfg = new OpcUaClientConfigBuilder();
+			cfg.setEndpoint(endpoints.get(0));
+
+			//setting up machine client with config
+			OpcUaClient connection = OpcUaClient.create(cfg.build());
+
+			//connecting machine
+			connection.connect().get();
+			Machine newMachine = new Machine(ipAddress,connection);
+			machines.add(newMachine);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void disconnectMachine(int id) {
