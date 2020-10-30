@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class System implements iSystem {
+
+public class BrewMES implements iBrewMES {
 	private Map<Integer, Machine> machines;
 	private Machine currentMachine;
 	private Batch selectedBatch;
@@ -19,9 +20,6 @@ public class System implements iSystem {
 		this.machines = machines;
 	}
 
-	public Machine getCurrentMachine() {
-		return currentMachine;
-	}
 
 	// picks based on MachineId
 	public void setCurrentMachine(int machineId) {
@@ -60,4 +58,29 @@ public class System implements iSystem {
 		throw new UnsupportedOperationException();
 	}
 
+
+	public Map<Integer, Machine> getMachines() {
+		return machines;
+	}
+
+	public Machine getCurrentMachine() {
+		return currentMachine;
+	}
+
+	public Batch getSelectedBatch() {
+		return selectedBatch;
+	}
+
+	public List<Batch> getLatestBatches() {
+		return latestBatches;
+	}
+
+	public void setSelectedBatch(Batch selectedBatch) {
+		this.selectedBatch = selectedBatch;
+	}
+
+	public void setLatestBatches(List<Batch> latestBatches) {
+		this.latestBatches = latestBatches;
+	}
 }
+
