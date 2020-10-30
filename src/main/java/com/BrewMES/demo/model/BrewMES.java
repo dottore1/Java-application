@@ -1,6 +1,9 @@
 package com.BrewMES.demo.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BrewMES implements iBrewMES {
 	private List<Machine> machines;
@@ -12,8 +15,17 @@ public class BrewMES implements iBrewMES {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setCurrentMachine(int machine) {
-		throw new UnsupportedOperationException();
+	public void setMachines(Map<Integer, Machine> machines) {
+		this.machines = machines;
+	}
+
+	public Machine getCurrentMachine() {
+		return currentMachine;
+	}
+
+	// picks based on MachineId
+	public void setCurrentMachine(int machineId) {
+		this.currentMachine = machines.get(machineId);
 	}
 
 	public Batch getBatch(int id) {
@@ -25,7 +37,11 @@ public class BrewMES implements iBrewMES {
 	}
 
 	public void connectMachine(String ipAddress) {
-		throw new UnsupportedOperationException();
+		if (machines.size() == 0) {
+			machines = new HashMap<>();
+		}
+		Machine newMachine = new Machine(ipAddress);
+		machines.put(newMachine.getId, newMachine);
 	}
 
 	public void disconnectMachine(int id) {
