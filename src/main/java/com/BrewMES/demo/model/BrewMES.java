@@ -9,7 +9,9 @@ public class BrewMES implements iBrewMES {
 	private List<Batch> latestBatches;
 
 	public static void main(String[] args) {
+
 		throw new UnsupportedOperationException();
+
 	}
 
 	public void setCurrentMachine(int machine) {
