@@ -15,7 +15,6 @@ public class BrewMES implements iBrewMES {
 	private Batch selectedBatch;
 	private List<Batch> latestBatches;
 
-
 	public static void main(String[] args) {
 		throw new UnsupportedOperationException();
 	}
@@ -28,7 +27,6 @@ public class BrewMES implements iBrewMES {
 	// picks based on MachineId
 	public void setCurrentMachine(int machineId) {
 		this.currentMachine = machines.get(machineId);
-
 	}
 
 	public Batch getBatch(int id) {
@@ -53,7 +51,7 @@ public class BrewMES implements iBrewMES {
 
 			//connecting machine
 			connection.connect().get();
-			if (machines.size() != 0) {
+			if (machines == null) {
 				machines = new HashMap<>();
 			}
 			Machine newMachine = new Machine(ipAddress, connection);
@@ -64,7 +62,7 @@ public class BrewMES implements iBrewMES {
 	}
 
 	public void disconnectMachine(int id) {
-		throw new UnsupportedOperationException();
+			machines.remove(id);
 	}
 
 	public void setMachineVariables(int speed, BeerType beerType, int batchSize) {

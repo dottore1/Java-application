@@ -4,6 +4,7 @@ import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
+import java.util.concurrent.ExecutionException;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 import java.util.concurrent.ExecutionException;
 
@@ -20,9 +21,9 @@ public class Machine {
     private double temperature;
     private double vibration;
     private double humidity;
-    private OpcUaClient connection;
 
     public Machine(String ipAddress,OpcUaClient connection) {
+        this.id = 0;
         this.ip = ipAddress;
         this.connection = connection;
     }
