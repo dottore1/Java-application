@@ -14,9 +14,21 @@ public class BrewMES implements iBrewMES {
 	private Machine currentMachine;
 	private Batch selectedBatch;
 	private List<Batch> latestBatches;
+	private static BrewMES instance;
 
 	public static void main(String[] args) {
 		throw new UnsupportedOperationException();
+	}
+	//private constructor avoids others to create instances.
+	private BrewMES() {
+
+	}
+	//Singleton method to get the BrewMes instance.
+	public static BrewMES getInstance() {
+		if (instance == null) {
+			instance = new BrewMES();
+		}
+		return instance;
 	}
 
 	public void setMachines(Map<Integer, Machine> machines) {
