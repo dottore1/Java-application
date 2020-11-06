@@ -13,7 +13,7 @@ class MachineTest {
 
     @BeforeEach
     void setUp() {
-        BrewMES brewMES = new BrewMES();
+        BrewMES brewMES = BrewMES.getInstance();
         brewMES.connectMachine("opc.tcp://127.0.0.1:4840");
         brewMES.setCurrentMachine(0);
         machine = brewMES.getMachines().get(0);
