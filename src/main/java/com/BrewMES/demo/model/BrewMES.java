@@ -3,10 +3,12 @@ package com.BrewMES.demo.model;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
 import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
+import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.UUID;
 
 
@@ -69,7 +71,10 @@ public class BrewMES implements iBrewMES {
 			}
 			Machine newMachine = new Machine(ipAddress, connection);
 			machines.put(newMachine.getId(), newMachine);
-		} catch (Exception e) {
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			Thread.currentThread().interrupt();
+		} catch (UaException | ExecutionException  e) {
 			e.printStackTrace();
 		}
 	}
