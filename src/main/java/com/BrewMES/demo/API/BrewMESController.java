@@ -34,6 +34,16 @@ public class BrewMESController {
         }
     }
 
+    //Set a machine as the currently selected machine
+    @PutMapping(value = "/currentmachine")
+    public ResponseEntity<Object> setCurrentMachine(@RequestBody String input){
+        JsonObject o = JsonParser.parseString(input).getAsJsonObject();
+        String s = o.get("id").getAsString();
+        UUID id = UUID.fromString(s);
+        brewMes.setCurrentMachine(id);
+        return new ResponseEntity<>(new StringResponse("Machine is set as current machine", HttpStatus.OK.value()), HttpStatus.OK);
+
+  
     //Get the current machine
     @GetMapping(value = "/currentmachine")
     public ResponseEntity<Object> getCurrentMachine() {
