@@ -223,15 +223,15 @@ public class Machine {
         try {
             //Set beertype on the machine
             NodeId SetBeerType = new NodeId(6, "::Program:Cube.Command.Parameter[1].Value");
-            connection.writeValue(SetBeerType, DataValue.valueOnly(new Variant(beerType.label))).get();
+            connection.writeValue(SetBeerType, DataValue.valueOnly(new Variant((float)beerType.label))).get();
 
             //Set speed on the machine
             NodeId SetSpeed = new NodeId(6, "::Program:Cube.Command.MachSpeed");
-            connection.writeValue(SetSpeed, DataValue.valueOnly(new Variant(speed))).get();
+            connection.writeValue(SetSpeed, DataValue.valueOnly(new Variant((float)speed))).get();
 
             //Set batch size on the machine
-            NodeId SetBatchSize = new NodeId(6, "::Program:Cube.Status.Parameter[2].Value");
-            connection.writeValue(SetBatchSize, DataValue.valueOnly(new Variant(batchSize))).get();
+            NodeId SetBatchSize = new NodeId(6, "::Program:Cube.Command.Parameter[2].Value");
+            connection.writeValue(SetBatchSize, DataValue.valueOnly(new Variant((float)batchSize))).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
