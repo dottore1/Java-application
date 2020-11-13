@@ -1,11 +1,9 @@
 package com.BrewMES.demo.API;
 
-import com.BrewMES.demo.model.BeerType;
-import com.BrewMES.demo.model.BrewMES;
-import com.BrewMES.demo.model.Command;
-import com.BrewMES.demo.model.iBrewMES;
+import com.BrewMES.demo.model.*;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +15,11 @@ import java.util.UUID;
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "*")
 public class BrewMESController {
-    private final iBrewMES brewMes = BrewMES.getInstance();
+
+    //allow spring to inject bean to field
+    @Autowired
+    private iBrewMES brewMes;
+
     //Get all machines
     @GetMapping(value = "/machines")
     public ResponseEntity<Object> getMachines() {
