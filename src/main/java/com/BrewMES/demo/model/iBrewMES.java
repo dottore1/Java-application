@@ -19,7 +19,7 @@ public interface iBrewMES {
 
 	public void disconnectMachine(UUID id);
 
-	public boolean connectMachine(String ipAddress);
+	public void connectMachine(String ipAddress);
 
 	public Map<UUID, Machine> getMachines();
 
