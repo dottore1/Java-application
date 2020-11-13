@@ -1,16 +1,15 @@
-package com.BrewMES.demo.model;
+package com.brewmes.demo.model;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 
 import javax.persistence.*;
-import java.util.concurrent.ExecutionException;
 
 @Entity
 @Table(name = "Machine")
@@ -42,44 +41,46 @@ public class Machine {
     @Transient
     private double humidity;
 
-    public Machine(String ipAddress,OpcUaClient connection) {
+    public Machine(String ipAddress, OpcUaClient connection) {
         this.id = UUID.randomUUID();
         this.ip = ipAddress;
         this.connection = connection;
     }
 
 
-
-
     public Machine() {
 
     }
+
     /**
      * This sends a command to the connected machine.
+     *
      * @param command the enum value to send to the machine.
      */
     public void controlMachine(Command command) {
-            try {
-                //Create nodeID for Control Command.
-                NodeId cntrlCmd = new NodeId(6, "::Program:Cube.Command.CntrlCmd");
+        try {
+            //Create nodeID for Control Command.
+            NodeId cntrlCmd = new NodeId(6, "::Program:Cube.Command.CntrlCmd");
 
-                // Switch on the enum, writing different values to the machine.
-                connection.writeValue(cntrlCmd, DataValue.valueOnly(new Variant(command.label))).get();
+            // Switch on the enum, writing different values to the machine.
+            connection.writeValue(cntrlCmd, DataValue.valueOnly(new Variant(command.label))).get();
 
-                //request change
-                changeRequest();
+            //request change
+            changeRequest();
 
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-                Thread.currentThread().interrupt();
-            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        }
     }
 
 
     //region READ HELPER METHODS
+
     /**
      * Reads an integer value from the machine via OPCUA
-     * @param ns is the namespace
+     *
+     * @param ns      is the namespace
      * @param address is the address eg. "::Program:Cube.Status.StateCurrent"
      * @return the integer value if found and -1 otherwise
      */
@@ -97,7 +98,8 @@ public class Machine {
 
     /**
      * Reads a double value from the machine via OPCUA
-     * @param ns is the namespace
+     *
+     * @param ns      is the namespace
      * @param address is the address eg. "::Program:Cube.Status.StateCurrent"
      * @return the double value if found and -1 otherwise
      */
@@ -212,12 +214,13 @@ public class Machine {
 
     /**
      * This writes the variables to the machine. The machine will not be started automatically.
-     * @param speed the speed of the machine.
-     * @param beerType the beer type for the machine.
+     *
+     * @param speed     the speed of the machine.
+     * @param beerType  the beer type for the machine.
      * @param batchSize the amount of beer to produce until stopping
      */
     public void setVariables(int speed, BeerType beerType, int batchSize) {
-        try{
+        try {
             //Set beertype on the machine
             NodeId SetBeerType = new NodeId(6, "::Program:Cube.Command.Parameter[1].Value");
             connection.writeValue(SetBeerType, DataValue.valueOnly(new Variant(beerType.label))).get();
@@ -243,91 +246,91 @@ public class Machine {
         return id;
     }
 
-    public String getIp() {
-        return ip;
-    }
-
-    public Batch getCurrentBatch() {
-        return currentBatch;
-    }
-
-    public double getOee() {
-        return oee;
-    }
-
-    public int getCurrentState() {
-        return currentState;
-    }
-
-    public int getTotalProducts() {
-        return totalProducts;
-    }
-
-    public int getAcceptableProducts() {
-        return acceptableProducts;
-    }
-
-    public int getDefectProducts() {
-        return defectProducts;
-    }
-
-    public double getTemperature() {
-        return temperature;
-    }
-
-    public double getVibration() {
-        return vibration;
-    }
-
-    public double getHumidity() {
-        return humidity;
-    }
-
-    public void setCurrentBatch(Batch currentBatch) {
-        this.currentBatch = currentBatch;
-    }
-
-    public void setOee(double oee) {
-        this.oee = oee;
-    }
-
-    public void setCurrentState(int currentState) {
-        this.currentState = currentState;
-    }
-
-    public void setTotalProducts(int totalProducts) {
-        this.totalProducts = totalProducts;
-    }
-
-    public void setAcceptableProducts(int acceptableProducts) {
-        this.acceptableProducts = acceptableProducts;
-    }
-
-    public void setDefectProducts(int defectProducts) {
-        this.defectProducts = defectProducts;
-    }
-
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
-    }
-
-    public void setVibration(double vibration) {
-        this.vibration = vibration;
-    }
-
-    public void setHumidity(double humidity) {
-        this.humidity = humidity;
-    }
-
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getIp() {
+        return ip;
     }
 
     public void setIp(String ip) {
         this.ip = ip;
     }
 
-    private void changeRequest(){
+    public Batch getCurrentBatch() {
+        return currentBatch;
+    }
+
+    public void setCurrentBatch(Batch currentBatch) {
+        this.currentBatch = currentBatch;
+    }
+
+    public double getOee() {
+        return oee;
+    }
+
+    public void setOee(double oee) {
+        this.oee = oee;
+    }
+
+    public int getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(int currentState) {
+        this.currentState = currentState;
+    }
+
+    public int getTotalProducts() {
+        return totalProducts;
+    }
+
+    public void setTotalProducts(int totalProducts) {
+        this.totalProducts = totalProducts;
+    }
+
+    public int getAcceptableProducts() {
+        return acceptableProducts;
+    }
+
+    public void setAcceptableProducts(int acceptableProducts) {
+        this.acceptableProducts = acceptableProducts;
+    }
+
+    public int getDefectProducts() {
+        return defectProducts;
+    }
+
+    public void setDefectProducts(int defectProducts) {
+        this.defectProducts = defectProducts;
+    }
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(double temperature) {
+        this.temperature = temperature;
+    }
+
+    public double getVibration() {
+        return vibration;
+    }
+
+    public void setVibration(double vibration) {
+        this.vibration = vibration;
+    }
+
+    public double getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(double humidity) {
+        this.humidity = humidity;
+    }
+
+    private void changeRequest() {
         try {
             //Create NodeID for Command Change Request.
             NodeId cmdChangeRequest = new NodeId(6, "::Program:Cube.Command.CmdChangeRequest");

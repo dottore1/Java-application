@@ -1,6 +1,8 @@
-package com.BrewMES.demo.API;
+package com.brewmes.demo.api;
 
-import com.BrewMES.demo.model.*;
+import com.brewmes.demo.model.BeerType;
+import com.brewmes.demo.model.Command;
+import com.brewmes.demo.model.iBrewMES;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +47,7 @@ public class BrewMESController {
         brewMes.setCurrentMachine(id);
         return new ResponseEntity<>(new StringResponse("Machine is set as current machine", HttpStatus.OK.value()), HttpStatus.OK);
     }
-  
+
     //Get the current machine
     @GetMapping(value = "/currentmachine")
     public ResponseEntity<Object> getCurrentMachine() {
@@ -62,7 +64,7 @@ public class BrewMESController {
     // Sends a command to the machine. The command is send via put request with a json object that is notated with e.g.
     // {'command': 'start'}
     @PutMapping(value = "machines/{id}/command")
-    public ResponseEntity<Object> updateMachineState(@PathVariable("id") UUID id, @RequestBody String input) {
+    public ResponseEntity<Object> controlMachine(@PathVariable("id") UUID id, @RequestBody String input) {
         JsonObject o = JsonParser.parseString(input).getAsJsonObject();
         String s = o.get("command").getAsString();
         ResponseEntity<Object> response = new ResponseEntity<>(new StringResponse("command updated", HttpStatus.OK.value()), HttpStatus.OK);

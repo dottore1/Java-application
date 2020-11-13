@@ -1,6 +1,6 @@
-package com.BrewMES.demo.Persistence;
+package com.brewmes.demo.Persistence;
 
-import com.BrewMES.demo.model.Machine;
+import com.brewmes.demo.model.Machine;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
