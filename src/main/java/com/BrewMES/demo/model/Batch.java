@@ -86,6 +86,10 @@ public class Batch {
 
 	}
 
+	public void setAverages(){
+
+	}
+
 	public UUID getId() {
 		return id;
 	}
