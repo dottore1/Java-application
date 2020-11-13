@@ -10,13 +10,14 @@ public class BrewMesApplication {
 	//This class was created by Spring, so for now I just let it be -Teis
 
 	public static void main(String[] args) {
-		BrewMES sys = BrewMES.getInstance();
-		sys.connectMachine("opc.tcp://127.0.0.1:4840");
-		sys.connectMachine("opc.tcp://127.0.0.1:4840");
-		sys.connectMachine("opc.tcp://127.0.0.1:4840");
-		sys.connectMachine("opc.tcp://127.0.0.1:4840");
-
 		SpringApplication.run(BrewMesApplication.class, args);
+		/*
+		BrewMES sys = new BrewMES();
+		sys.connectMachine("opc.tcp://127.0.0.1:4840");
+		sys.connectMachine("opc.tcp://127.0.0.1:4840");
+		sys.connectMachine("opc.tcp://127.0.0.1:4840");
+		sys.connectMachine("opc.tcp://127.0.0.1:4840");
+*/
 	}
 
 }

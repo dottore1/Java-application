@@ -2,6 +2,8 @@ package com.BrewMES.demo.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -11,10 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class MachineTest {
 
     public Machine machine;
+    @Autowired
+    private BrewMES brewMES;
 
     @BeforeEach
     void setUp() {
-        BrewMES brewMES = BrewMES.getInstance();
         brewMES.connectMachine("opc.tcp://127.0.0.1:4840");
         Machine[] machines = brewMES.getMachines().values().toArray(Machine[]::new);
         brewMES.setCurrentMachine(machines[0].getId());

@@ -8,20 +8,38 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
+
+import javax.persistence.*;
 import java.util.concurrent.ExecutionException;
 
+@Entity
+@Table(name = "Machine")
 public class Machine {
+
+    @Id
+    @Column(name = "id")
     private UUID id;
+    @Column(name = "ip")
     private String ip;
+    @Transient
     private OpcUaClient connection;
+    @Transient
     private Batch currentBatch;
+    @Transient
     private double oee;
+    @Transient
     private int currentState;
+    @Transient
     private int totalProducts;
+    @Transient
     private int acceptableProducts;
+    @Transient
     private int defectProducts;
+    @Transient
     private double temperature;
+    @Transient
     private double vibration;
+    @Transient
     private double humidity;
 
     public Machine(String ipAddress,OpcUaClient connection) {
@@ -30,10 +48,12 @@ public class Machine {
         this.connection = connection;
     }
 
-    public Machine(String ipAddress) {
-        this.ip = ipAddress;
-    }
 
+
+
+    public Machine() {
+
+    }
     /**
      * This sends a command to the connected machine.
      * @param command the enum value to send to the machine.
@@ -297,6 +317,14 @@ public class Machine {
 
     public void setHumidity(double humidity) {
         this.humidity = humidity;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     private void changeRequest(){
