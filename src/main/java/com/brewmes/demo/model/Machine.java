@@ -4,6 +4,7 @@ import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
+
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 
 import java.util.UUID;
@@ -76,11 +77,11 @@ public class Machine {
 
 
     //region READ HELPER METHODS
-
     /**
      * Reads an integer value from the machine via OPCUA
      *
      * @param ns      is the namespace
+
      * @param address is the address eg. "::Program:Cube.Status.StateCurrent"
      * @return the integer value if found and -1 otherwise
      */
@@ -212,6 +213,7 @@ public class Machine {
         throw new UnsupportedOperationException();
     }
 
+
     /**
      * This writes the variables to the machine. The machine will not be started automatically.
      *
@@ -246,6 +248,7 @@ public class Machine {
         return id;
     }
 
+
     public void setId(UUID id) {
         this.id = id;
     }
@@ -266,6 +269,7 @@ public class Machine {
         this.currentBatch = currentBatch;
     }
 
+
     public double getOee() {
         return oee;
     }
@@ -273,6 +277,7 @@ public class Machine {
     public void setOee(double oee) {
         this.oee = oee;
     }
+
 
     public int getCurrentState() {
         return currentState;
@@ -282,6 +287,7 @@ public class Machine {
         this.currentState = currentState;
     }
 
+
     public int getTotalProducts() {
         return totalProducts;
     }
@@ -290,13 +296,16 @@ public class Machine {
         this.totalProducts = totalProducts;
     }
 
+
     public int getAcceptableProducts() {
         return acceptableProducts;
     }
 
+
     public void setAcceptableProducts(int acceptableProducts) {
         this.acceptableProducts = acceptableProducts;
     }
+
 
     public int getDefectProducts() {
         return defectProducts;
@@ -306,6 +315,7 @@ public class Machine {
         this.defectProducts = defectProducts;
     }
 
+
     public double getTemperature() {
         return temperature;
     }
@@ -313,6 +323,7 @@ public class Machine {
     public void setTemperature(double temperature) {
         this.temperature = temperature;
     }
+
 
     public double getVibration() {
         return vibration;
@@ -322,13 +333,14 @@ public class Machine {
         this.vibration = vibration;
     }
 
+
     public double getHumidity() {
         return humidity;
     }
-
     public void setHumidity(double humidity) {
         this.humidity = humidity;
     }
+
 
     private void changeRequest() {
         try {

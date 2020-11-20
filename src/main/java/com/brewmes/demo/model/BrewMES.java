@@ -1,5 +1,6 @@
 package com.brewmes.demo.model;
 
+
 import com.brewmes.demo.Persistence.BatchRepository;
 import com.brewmes.demo.Persistence.MachineRepository;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
@@ -7,6 +8,7 @@ import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
 import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,8 @@ public class BrewMES implements iBrewMES {
 
         if (batch != null) {
             batch.setAverages();
+            batch.setMaxes();
+            batch.setMinimums();
         }
 
         return batch;
