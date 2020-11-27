@@ -59,7 +59,7 @@ public class Machine {
     private int wheat;
     @Transient
     private int yeast;
-    @Transiset
+    @Transient
     private int batchID;
     @Transient
     private double speed;
