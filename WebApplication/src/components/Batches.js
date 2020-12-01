@@ -10,8 +10,15 @@ export class Batches extends Component {
         selectSuccess: false,
         errorMessage: "",
         link: "",
-        Pagebatches: []
+        Pagebatches: [],
+        selectedBatch: "", 
+        page: 0,
+        maxpage: 0,
     };
+
+    componentDidMount(){
+        this.getBatches(0);
+    }
 
     search = (e) => {
         fetch('http://localhost:8080/api/batches/' + document.getElementById("searchField").value)
@@ -32,13 +39,58 @@ export class Batches extends Component {
     }
 
     change = (e) => {
-        
-    }
+        this.setState({selectedBatch: e.target.value
+    });
+}
 
 
 
     generatePDF = (e) => {
-        window.location.href = this.state.link;
+        if(e.target.value === "search"){
+            window.location.href = this.state.link;
+        } else if(e.target.value === "pages"){
+            window.location.href = "http://localhost:8080/api/batches/" + this.state.selectedBatch + "/get-report"
+        }
+    }
+
+    getBatches(page){
+        this.setState({
+            Pagebatches: []
+        });
+        console.log("fetching.. ", this.state.page)
+        this.setState({page: page})
+        fetch('http://localhost:8080/api/batches?page=' + page +'&size=10')
+        .then(response => {
+            if(response.status === 200){
+                response.json().then(data => {
+                    data.batches.forEach(element => {
+                        this.setState({
+                            Pagebatches: [...this.state.Pagebatches, {id:element.id}]
+                        });
+                    });
+                    this.setState({maxpage: data.totalPages-1});
+                })
+            }
+        })
+    }
+
+
+    updatePage = (e) => {
+        if(e.target.value === "prev"){
+            if(this.state.page > 0){
+                let page = this.state.page - 1;
+                console.log("Current page:", this.state.page);
+                console.log("New page:", page);
+                this.getBatches(page);
+            } 
+        } else if(e.target.value === "next"){
+            if(this.state.page < this.state.maxpage){
+                let page = this.state.page + 1;
+                console.log("Current page:", this.state.page);
+                console.log("New page:", page);
+                this.getBatches(page);
+            } 
+        }
     }
 
     render() {
@@ -63,27 +115,51 @@ export class Batches extends Component {
                 </div>
                 <div>
                     <input id="searchField" placeholder="Batch ID"></input>
-                    <button onClick={this.search}>Search</button>
+                    <button style={btnStyle} onClick={this.search}>Search</button>
                 </div>
-                <div>
-                    {this.state.selectSuccess === true ? (<button onClick={this.generatePDF}>Generate Report</button>) : (<p></p>)}
+                <div style={{padding:"10px"}}>
+                    {this.state.selectSuccess === true ? (<button value="search" style={btnStyle} onClick={this.generatePDF}>Generate Report</button>) : (<p></p>)}
                 </div>
-                <select 
-                        size="10"
-                        onChange={this.change}
-                >
-                    {this.state.machines.map((option) => (
-                        <option 
-                            value={JSON.stringify(option)}
-                            key={option.value}
-                        >
-                            {option.label} 
-                        </option>
-                    ))}
-                </select>
+                <div style={{margin:"25px"}}>
+                    <select 
+                            size="10"
+                            onChange={this.change}
+                            style={{overflow: "hidden", width: "20%", textAlign: "center", fontSize: "16px"}}
+                    >
+                        {this.state.Pagebatches.map((option) => (
+                            <option 
+                                value={option.id}
+                                key={option.id}
+                            >
+                                {option.id} 
+                            </option>
+                        ))}
+                        
+                    </select>
+                    <div>
+                        <button style={btnStyle} onClick={this.updatePage} value="prev">&lt;prev</button>
+                        <button style={btnStyle} onClick={this.updatePage} value="next">next&gt;</button>
+                    
+                    </div>
+                    <div style={{padding:"10px"}}>
+                        <button value="pages" style={btnStyle} onClick={this.generatePDF}>Generate Report</button>
+                    </div>
+                </div>
             </div>
         )
     }
+}
+const btnStyle = {
+    backgroundColor: "#696969",
+    border: "1px solid #000",
+    display: "inline-block",
+    color: "#fff",
+    fontSize: "14px",
+    fontWeight: "bold",
+    padding: "8px 12px",
+    margin: "0px 5px",
+    textDecoration: "none",
+    width: "10%"
 }
 
 export default Batches
