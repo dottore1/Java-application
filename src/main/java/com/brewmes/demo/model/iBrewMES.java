@@ -21,4 +21,6 @@ public interface iBrewMES {
 
     public abstract String getMachineVariables();
 
+    public Map<String, Object> getBatchesPage(int page, int size);
+
 }

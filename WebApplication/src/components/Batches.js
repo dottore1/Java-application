@@ -9,7 +9,8 @@ export class Batches extends Component {
         selectedBatchID: "",
         selectSuccess: false,
         errorMessage: "",
-        link: ""
+        link: "",
+        Pagebatches: []
     };
 
     search = (e) => {
@@ -29,6 +30,12 @@ export class Batches extends Component {
             )
 
     }
+
+    change = (e) => {
+        
+    }
+
+
 
     generatePDF = (e) => {
         window.location.href = this.state.link;
@@ -61,7 +68,19 @@ export class Batches extends Component {
                 <div>
                     {this.state.selectSuccess === true ? (<button onClick={this.generatePDF}>Generate Report</button>) : (<p></p>)}
                 </div>
-
+                <select 
+                        size="10"
+                        onChange={this.change}
+                >
+                    {this.state.machines.map((option) => (
+                        <option 
+                            value={JSON.stringify(option)}
+                            key={option.value}
+                        >
+                            {option.label} 
+                        </option>
+                    ))}
+                </select>
             </div>
         )
     }

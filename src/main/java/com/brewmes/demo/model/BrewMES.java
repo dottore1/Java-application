@@ -9,17 +9,17 @@ import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Service
-@Transactional
+//@Transactional
 public class BrewMES implements iBrewMES {
 
     //Repository injected by Spring
@@ -93,6 +93,21 @@ public class BrewMES implements iBrewMES {
             e.printStackTrace();
         }
         return false;
+    }
+    public Map<String, Object> getBatchesPage(int page, int size){
+        List<Batch> batches = new ArrayList<>();
+        Pageable paging = PageRequest.of(page, size);
+
+        Page<Batch> pageBatch = batchRepo.findAll(paging);
+
+        batches = pageBatch.getContent();
+        Map<String, Object> response = new HashMap<>();
+        response.put("batches", batches);
+        response.put("currentPage", pageBatch.getNumber());
+        response.put("totalItems", pageBatch.getTotalElements());
+        response.put("totalPages", pageBatch.getTotalPages());
+
+        return response;
     }
 
     private OpcUaClient getOpcUaClient(String ipAddress) throws InterruptedException, ExecutionException, UaException {

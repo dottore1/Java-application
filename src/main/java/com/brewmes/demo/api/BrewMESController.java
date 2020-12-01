@@ -1,14 +1,13 @@
 package com.brewmes.demo.api;
 
-import com.brewmes.demo.model.Report;
+import com.brewmes.demo.model.*;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import com.brewmes.demo.model.BeerType;
-
-import com.brewmes.demo.model.Command;
-import com.brewmes.demo.model.iBrewMES;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,11 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -115,8 +113,8 @@ public class BrewMESController {
 
     //make this method return last 10 batches
     @GetMapping(value = "/batches")
-    public ResponseEntity<Object> getBatches() {
-        return new ResponseEntity<>(new StringResponse("Not Implemented yet", HttpStatus.NOT_IMPLEMENTED.value()), HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<Map<String, Object>> getBatches(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "2") int size) {
+        return new ResponseEntity<>(brewMes.getBatchesPage(page, size), HttpStatus.OK);
     }
 
     //make this method return a batch based on it's id
@@ -160,4 +158,5 @@ public class BrewMESController {
             return new ResponseEntity<>(new StringResponse("File not found " + fileName, HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
         }
     }
+
 }
