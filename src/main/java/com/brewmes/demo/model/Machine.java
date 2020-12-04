@@ -4,15 +4,13 @@ import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
-
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UShort;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
-
-import javax.persistence.*;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
@@ -301,7 +299,7 @@ public class Machine {
             NodeId nodeId = new NodeId(6, "::Program:Maintenance.Counter");
             DataValue dataValue = connection.readValue(0, TimestampsToReturn.Both, nodeId).get();
             Variant variant = dataValue.getValue();
-            UShort value  = (UShort) variant.getValue();
+            UShort value = (UShort) variant.getValue();
 
             return value.intValue();
         } catch (Exception e) {
@@ -309,15 +307,6 @@ public class Machine {
             e.printStackTrace();
             return -1;
         }
-    }
-
-
-    private void saveBatch() {
-        throw new UnsupportedOperationException();
-    }
-
-    private double calculateOEE() {
-        throw new UnsupportedOperationException();
     }
 
 
@@ -331,16 +320,16 @@ public class Machine {
     public void setVariables(int speed, BeerType beerType, int batchSize) {
         try {
             //Set beertype on the machine
-            NodeId SetBeerType = new NodeId(6, "::Program:Cube.Command.Parameter[1].Value");
-            connection.writeValue(SetBeerType, DataValue.valueOnly(new Variant((float) beerType.label))).get();
+            NodeId setBeerType = new NodeId(6, "::Program:Cube.Command.Parameter[1].Value");
+            connection.writeValue(setBeerType, DataValue.valueOnly(new Variant((float) beerType.label))).get();
 
             //Set speed on the machine
-            NodeId SetSpeed = new NodeId(6, "::Program:Cube.Command.MachSpeed");
-            connection.writeValue(SetSpeed, DataValue.valueOnly(new Variant((float) speed))).get();
+            NodeId setSpeed = new NodeId(6, "::Program:Cube.Command.MachSpeed");
+            connection.writeValue(setSpeed, DataValue.valueOnly(new Variant((float) speed))).get();
 
             //Set batch size on the machine
-            NodeId SetBatchSize = new NodeId(6, "::Program:Cube.Command.Parameter[2].Value");
-            connection.writeValue(SetBatchSize, DataValue.valueOnly(new Variant((float) batchSize))).get();
+            NodeId setBatchSize = new NodeId(6, "::Program:Cube.Command.Parameter[2].Value");
+            connection.writeValue(setBatchSize, DataValue.valueOnly(new Variant((float) batchSize))).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
@@ -561,7 +550,7 @@ public class Machine {
      * as this overwhelms the time in state 17 making the graph ugly and displaying irrelevant data.
      */
     private void updateBatch() {
-        if(this.currentState != 17) {
+        if (this.currentState != 17) {
             currentBatch.addHumidity(LocalDateTime.now(), this.humidity);
             currentBatch.addVibration(LocalDateTime.now(), this.vibration);
             currentBatch.addTemperature(LocalDateTime.now(), this.vibration);

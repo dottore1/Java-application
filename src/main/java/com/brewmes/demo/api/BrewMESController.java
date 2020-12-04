@@ -3,26 +3,19 @@ package com.brewmes.demo.api;
 import com.brewmes.demo.model.*;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
-
-import java.text.SimpleDateFormat;
-import java.util.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -30,7 +23,7 @@ import java.io.FileNotFoundException;
 public class BrewMESController {
     //allow spring to inject bean to field
     @Autowired
-    private iBrewMES brewMes;
+    private IBrewMES brewMes;
 
     //Get all machines
     @GetMapping(value = "/machines")
@@ -77,14 +70,13 @@ public class BrewMESController {
     //Connect machine
     //handles post request with json: {"ip":"<ip to connect>"}
     @PostMapping(value = "/machines")
-    public ResponseEntity<Object> AddMachine(@RequestBody String input) {
+    public ResponseEntity<Object> addMachine(@RequestBody String input) {
         JsonObject o = JsonParser.parseString(input).getAsJsonObject();
         String ip = o.get("ip").getAsString();
         boolean success = brewMes.connectMachine(ip);
-
-        if(success){
+        if (success) {
             return new ResponseEntity<>(new StringResponse("Success", HttpStatus.OK.value()), HttpStatus.OK);
-        }else{
+        } else {
             return new ResponseEntity<>(new StringResponse("Failed, not a valid ip", HttpStatus.NOT_ACCEPTABLE.value()), HttpStatus.NOT_ACCEPTABLE);
         }
     }
@@ -98,15 +90,14 @@ public class BrewMESController {
         int batchSize = o.get("batchSize").getAsInt();
         ResponseEntity<Object> response = new ResponseEntity<>(new StringResponse("Variables set.", HttpStatus.OK.value()), HttpStatus.OK);
         switch (beerType) {
-            case "pilsner" -> brewMes.setMachineVariables(speed*600/100, BeerType.PILSNER, batchSize, id);
-            case "wheat" -> brewMes.setMachineVariables(speed*300/100, BeerType.WHEAT, batchSize, id);
-            case "stout" -> brewMes.setMachineVariables(speed*150/100, BeerType.STOUT, batchSize, id);
-            case "ipa" -> brewMes.setMachineVariables(speed*200/100, BeerType.IPA, batchSize, id);
+            case "pilsner" -> brewMes.setMachineVariables(speed * 600 / 100, BeerType.PILSNER, batchSize, id);
+            case "wheat" -> brewMes.setMachineVariables(speed * 300 / 100, BeerType.WHEAT, batchSize, id);
+            case "stout" -> brewMes.setMachineVariables(speed * 150 / 100, BeerType.STOUT, batchSize, id);
+            case "ipa" -> brewMes.setMachineVariables(speed * 200 / 100, BeerType.IPA, batchSize, id);
             case "ale" -> brewMes.setMachineVariables(speed, BeerType.ALE, batchSize, id);
-            case "alcohol_free" -> brewMes.setMachineVariables(speed*125/100, BeerType.ALCHOL_FREE, batchSize, id);
+            case "alcohol_free" -> brewMes.setMachineVariables(speed * 125 / 100, BeerType.ALCHOL_FREE, batchSize, id);
             default -> new ResponseEntity<>(new StringResponse("I do not know that beer type.", HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
         }
-
         return response;
     }
 
@@ -120,27 +111,26 @@ public class BrewMESController {
     //make this method return a batch based on it's id
     @GetMapping(value = "/batches/{id}")
     public ResponseEntity<Object> getBatch(@PathVariable("id") UUID id) {
-          if(brewMes.getBatch(id) != null){
+        if (brewMes.getBatch(id) != null) {
             return new ResponseEntity<>(brewMes.getBatch(id), HttpStatus.OK);
-        }else{
+        } else {
             return new ResponseEntity<>(new StringResponse("No batch found with that ID", HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
         }
     }
-  
 
 
     /**
-     *  returns ResponseEntity containing a InputStreamResource with the pdf file
-     *  coresponding to the filename.
+     * returns ResponseEntity containing a InputStreamResource with the pdf file
+     * coresponding to the filename.
      *
      * @param id the id on the id to be generated
      * @return ResponseEntity with InputStreamResource containing the file
-     * @exception FileNotFoundException if thrown, return a ResponseEntity with 404 not found.
+     * @throws FileNotFoundException if thrown, return a ResponseEntity with 404 not found.
      */
     @GetMapping(value = "batches/{id}/get-report", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<Object> getBatchReport(@PathVariable UUID id)  {
-        Report.generatePDF(brewMes.getBatch(id));
-        String fileName =  "batch_report.pdf";
+    public ResponseEntity<Object> getBatchReport(@PathVariable UUID id) {
+        brewMes.generateReport(brewMes.getBatch(id));
+        String fileName = "batch_report.pdf";
         File file = new File(fileName);
         InputStreamResource resource = null;
         try {

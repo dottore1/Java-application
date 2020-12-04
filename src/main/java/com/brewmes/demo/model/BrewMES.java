@@ -7,20 +7,21 @@ import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
 import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 @Service
 //@Transactional
-public class BrewMES implements iBrewMES {
+public class BrewMES implements IBrewMES {
 
     //Repository injected by Spring
     @Autowired
@@ -45,8 +46,8 @@ public class BrewMES implements iBrewMES {
         return batch;
     }
 
-    public void getReport(Batch batch) {
-        throw new UnsupportedOperationException();
+    public void generateReport(Batch batch) {
+        Report.generatePDF(batch);
     }
 
     /**
@@ -94,13 +95,13 @@ public class BrewMES implements iBrewMES {
         }
         return false;
     }
-    public Map<String, Object> getBatchesPage(int page, int size){
-        List<Batch> batches = new ArrayList<>();
+
+    public Map<String, Object> getBatchesPage(int page, int size) {
         Pageable paging = PageRequest.of(page, size);
 
         Page<Batch> pageBatch = batchRepo.findAll(paging);
 
-        batches = pageBatch.getContent();
+        List<Batch> batches = pageBatch.getContent();
         Map<String, Object> response = new HashMap<>();
         response.put("batches", batches);
         response.put("currentPage", pageBatch.getNumber());
@@ -140,31 +141,23 @@ public class BrewMES implements iBrewMES {
      * Makes a single thread that loops through all the machines and saves their batch to the database if the state of the machine is 17
      */
     private void makeBatchSaveThread() {
-        if(batchSaveThread == null) {
+        if (batchSaveThread == null) {
 
-            batchSaveThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (true) {
-                        for (Machine machine : machines.values()) {
-                            if (machine.getCurrentState() == 17) {
-                                if (machine.getCurrentBatch() != null) {
-                                    if (!machine.getCurrentBatch().isSaved()) {
-                                        machine.setCurrentBatch(batchRepo.save(machine.getCurrentBatch()));
-                                        machine.getCurrentBatch().setSaved(true);
-                                    }
-                                }
-
-                            }
+            batchSaveThread = new Thread(() -> {
+                while (true) {
+                    for (Machine machine : machines.values()) {
+                        if (machine.getCurrentState() == 17 && machine.getCurrentBatch() != null && !machine.getCurrentBatch().isSaved()) {
+                            machine.setCurrentBatch(batchRepo.save(machine.getCurrentBatch()));
+                            machine.getCurrentBatch().setSaved(true);
                         }
+                    }
 
-                        try {
-                            Thread.currentThread().sleep(5000);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                            batchSaveThread = null;
-                            e.printStackTrace();
-                        }
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        batchSaveThread = null;
+                        e.printStackTrace();
                     }
                 }
             });
