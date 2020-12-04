@@ -330,7 +330,7 @@ public class Batch {
         double idealCycleTime = 1.0 / (double)BeerType.valueOfLabel(this.productType).maxSpeed;
         double plannedProductionTime = 1.0/ (this.machineSpeed / (double)totalProducts);
 
-        BigDecimal bd = new BigDecimal((((goodCount * idealCycleTime) / plannedProductionTime)*100));
+        BigDecimal bd = BigDecimal.valueOf((((goodCount * idealCycleTime) / plannedProductionTime)*100));
         bd = bd.round(new MathContext(5));
         return bd.doubleValue();
     }

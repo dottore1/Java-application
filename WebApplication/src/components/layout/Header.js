@@ -19,6 +19,7 @@ export class Header extends Component {
                 <p>Current machine: <i style={this.textStyle()}>{this.props.machine.ip}</i></p>
                 <div>
                     <Link style={linkStyle} to="/">Home</Link>
+                    <Link style={linkStyle} to="/control">Control</Link>
                     <Link style={linkStyle} to="/batch">Batches</Link>
                 </div>
 

@@ -46,7 +46,13 @@ export class Liveview extends Component {
             )
         );
     }
+    componentWillUnmount(){
+        console.log("Leaving liveview")
+        let socket = this.state.socket;
+        socket.close();
+    }
 
+    
     //Connect method that subscribes to the live data
     connect(id, func) {
         let stompClient = this.state.stompClient
@@ -121,9 +127,24 @@ export class Liveview extends Component {
                         <p>Temperature</p>
                         <h1>{this.state.livedata.temperature}</h1>
                     </div>
+                    <div style={{padding: "25px"}}>
+                        <Icon icon="cil-speedometer" style={{width: "80px", height: "80px"}}/>
+                        <p>Speed</p>
+                        <h1>{Math.round(this.state.livedata.speed)}%</h1>
+                    </div>
+                    <div style={{padding: "25px"}}>
+                        <Icon icon="mdi-state-machine" style={{width: "80px", height: "80px"}}/>
+                        <p>State</p>
+                        <h1>{this.state.livedata.currentState}</h1>
+                    </div>
                 </div>
                 <br></br>
                 <div style={{display: "inline-flex", align: "center", padding: "10px"}}>
+                    <div style={{padding: "25px"}}>
+                        <Icon icon="jam-bottle-f" style={{width: "80px", height: "80px"}}/>
+                        <p>Beer type</p>
+                        <h1>{this.state.livedata.beerType}</h1>
+                    </div>
                     <div style={{padding: "25px"}}>
                         <Icon icon="bx-bxs-flag-checkered" style={{width: "80px", height: "80px"}}/> <br></br>
                         <p>Amount to produce</p>
@@ -154,21 +175,6 @@ export class Liveview extends Component {
                         <Icon icon="mdi-archive" style={{width: "80px", height: "80px", color: "#dbd202"}}/>
                         <p>Batch id</p>
                         <h1>{this.state.livedata.batchID}</h1>
-                    </div>
-                    <div style={{padding: "25px"}}>
-                        <Icon icon="cil-speedometer" style={{width: "80px", height: "80px"}}/>
-                        <p>Speed</p>
-                        <h1>{Math.round(this.state.livedata.speed)}%</h1>
-                    </div>
-                    <div style={{padding: "25px"}}>
-                        <Icon icon="jam-bottle-f" style={{width: "80px", height: "80px"}}/>
-                        <p>Beer type</p>
-                        <h1>{this.state.livedata.beerType}</h1>
-                    </div>
-                    <div style={{padding: "25px"}}>
-                        <Icon icon="mdi-state-machine" style={{width: "80px", height: "80px"}}/>
-                        <p>State</p>
-                        <h1>{this.state.livedata.currentState}</h1>
                     </div>
                 </div>
             </div>

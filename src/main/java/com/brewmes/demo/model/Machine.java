@@ -66,9 +66,7 @@ public class Machine {
     @Transient
     private double yeast;
     @Transient
-    private int yeast;
-    @Transient
-    private int batchID;
+    private UUID batchID;
     @Transient
     private double speed;
     @Transient
@@ -111,7 +109,7 @@ public class Machine {
             changeRequest();
 
             //Starts a new batch if the machine is commanded to start a new batch.
-            if (command == Command.START) {
+            if (command == Command.START && readState() == 4) {
                 this.currentBatch = new Batch(UUID.randomUUID());
                 this.stateTimestamp = LocalDateTime.now();
             }
@@ -425,11 +423,11 @@ public class Machine {
         this.amountToProduce = amountToProduce;
     }
 
-    public int getBatchID() {
+    public UUID getBatchID() {
         return batchID;
     }
 
-    public void setBatchID(int batchID) {
+    public void setBatchID(UUID batchID) {
         this.batchID = batchID;
     }
 
@@ -513,7 +511,9 @@ public class Machine {
         this.defectProducts = readDefectiveCount();
         this.acceptableProducts = readProcessedCount() - this.defectProducts;
 
-        this.batchID = readBatchCurrentId();
+        if (this.currentBatch != null) {
+            this.batchID = this.currentBatch.getId();
+        }
         this.speed = readNormalizedMachineSpeed();
         this.beerType = readBatchBeerType();
 
