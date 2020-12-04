@@ -5,6 +5,7 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 
+import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UShort;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 
 import java.time.LocalDateTime;
@@ -71,6 +72,8 @@ public class Machine {
     private double speed;
     @Transient
     private int beerType;
+    @Transient
+    private int maintenance;
 
     public Machine(String ipAddress, OpcUaClient connection) {
         this.id = UUID.randomUUID();
@@ -290,6 +293,24 @@ public class Machine {
 
     //endregion
 
+    public int readMaintenance() {
+        // Reads the current maintenance value
+        // Ns: 6
+        // ::Program:Maintenance.Counter
+        try {
+            NodeId nodeId = new NodeId(6, "::Program:Maintenance.Counter");
+            DataValue dataValue = connection.readValue(0, TimestampsToReturn.Both, nodeId).get();
+            Variant variant = dataValue.getValue();
+            UShort value  = (UShort) variant.getValue();
+
+            return value.intValue();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
 
     private void saveBatch() {
         throw new UnsupportedOperationException();
@@ -495,12 +516,22 @@ public class Machine {
         this.yeast = yeast;
     }
 
+    public int getMaintenance() {
+        return maintenance;
+    }
+
+    public void setMaintenance(int maintenance) {
+        this.maintenance = maintenance;
+    }
+
     public void readLiveData() {
         this.barley = readBarley();
         this.malt = readMalt();
         this.hops = readHops();
         this.wheat = readWheat();
         this.yeast = readYeast();
+
+        this.maintenance = readMaintenance();
 
         this.humidity = readHumidity();
         this.vibration = readVibration();
