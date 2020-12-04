@@ -31,6 +31,7 @@ public class BrewMES implements iBrewMES {
     private Map<UUID, Machine> machines;
     private Batch selectedBatch;
     private List<Batch> latestBatches;
+    private Thread batchSaveThread;
 
     public Batch getBatch(UUID id) {
         Batch batch = batchRepo.findById(id).orElse(null);
@@ -63,6 +64,7 @@ public class BrewMES implements iBrewMES {
             Machine newMachine = new Machine(ipAddress, connection);
             machineRepo.save(newMachine);
             machines.put(newMachine.getId(), newMachine);
+            makeBatchSaveThread();
             return true;
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -82,6 +84,7 @@ public class BrewMES implements iBrewMES {
             Machine newMachine = new Machine(ipAddress, connection, id);
             machineRepo.save(newMachine);
             machines.put(newMachine.getId(), newMachine);
+            makeBatchSaveThread();
             return true;
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -118,6 +121,44 @@ public class BrewMES implements iBrewMES {
         machineRepo.deleteById(id);
     }
 
+    /**
+     * Makes a single thread that loops through all the machines and saves their batch to the database if the state of the machine is 17
+     */
+    private void makeBatchSaveThread() {
+        if(batchSaveThread == null) {
+
+            batchSaveThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        for (Machine machine : machines.values()) {
+                            if (machine.getCurrentState() == 17) {
+                                if (machine.getCurrentBatch() != null) {
+                                    if (!machine.getCurrentBatch().isSaved()) {
+                                        machine.setCurrentBatch(batchRepo.save(machine.getCurrentBatch()));
+                                        machine.getCurrentBatch().setSaved(true);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        try {
+                            Thread.currentThread().sleep(5000);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                            batchSaveThread = null;
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+
+            batchSaveThread.setDaemon(true);
+            batchSaveThread.start();
+        }
+    }
+
     public void setMachineVariables(int speed, BeerType beerType, int batchSize, UUID id) {
         machines.get(id).setVariables(speed, beerType, batchSize);
     }
@@ -146,6 +187,7 @@ public class BrewMES implements iBrewMES {
                 connectMachineWithID(machine.getIp(), machine.getId());
             }
         });
+
         return machines;
     }
 
