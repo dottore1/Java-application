@@ -97,19 +97,20 @@ export class MachineList extends Component {
         return (
             <div>
                 <form>
-                    <input placeholder = "ip" value = {this.state.machineIP} onChange = {this.ipChanged}></input>
+                    <input placeholder = "opc.tcp://<ip adress>:<port>" value = {this.state.machineIP} onChange = {this.ipChanged} style={inputStyle}></input>
+                    <button onClick={this.addMachineHandler} style={btnStyle}>Add machine</button>
                 </form>
-                <button onClick={this.addMachineHandler} style={btnStyle}>Add machine</button>
                 {errorMessage}
 
-                <h1>Machines:</h1>
+                <h1>All machines</h1>
 
-                <select 
+                <select style={selectStyle}
                         size="10"
                         onChange={this.change}
                 >
                     {this.state.machines.map((option) => (
                         <option 
+                            style={optionStyle}
                             value={JSON.stringify(option)}
                             key={option.value}
                         >
@@ -142,5 +143,28 @@ const btnStyle = {
     textDecoration: "none",
     width: "10%"
 }
+
+const selectStyle = {
+    height: "580px", 
+    width: "60%",
+    textAlign: "center", 
+    fontSize: "26px",
+    boxSizing: "content-box",
+    border: "hidden"
+  }
+
+  const optionStyle = {
+    padding: "8px", 
+    backgroundColor: "#D0D0D0"
+  }
+
+  const inputStyle =   {
+    width: "50%",
+    padding: "12px 20px",
+    margin: "8px 0",
+    boxSizing: "border-box",
+    border: "none",
+    borderBottom: "4px solid grey"
+  }
 
 export default MachineList

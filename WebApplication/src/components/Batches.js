@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Icon } from '@iconify/react-with-api';
 
 export class Batches extends Component {
     //State contains all the variables of the class
@@ -114,31 +115,37 @@ export class Batches extends Component {
                     {errorMessage}
                 </div>
                 <div>
-                    <input id="searchField" placeholder="Batch ID"></input>
+                    <input style={inputStyle} id="searchField" placeholder="Batch ID"></input>
                     <button style={btnStyle} onClick={this.search}>Search</button>
                 </div>
                 <div style={{padding:"10px"}}>
                     {this.state.selectSuccess === true ? (<button value="search" style={btnStyle} onClick={this.generatePDF}>Generate Report</button>) : (<p></p>)}
                 </div>
                 <div style={{margin:"25px"}}>
+                <div>
+                    <h1>All batches</h1>
+                </div>
                     <select 
                             size="10"
                             onChange={this.change}
-                            style={{overflow: "hidden", width: "20%", textAlign: "center", fontSize: "16px"}}
+                            style={selectStyle}
                     >
                         {this.state.Pagebatches.map((option) => (
-                            <option 
+                            <option style={optionStyle}
                                 value={option.id}
                                 key={option.id}
                             >
                                 {option.id} 
                             </option>
+                            
                         ))}
-                        
                     </select>
                     <div>
+                        <p style={{fontSize: "20px"}}>{this.state.page+1} of {this.state.maxpage+1}</p>
+                    </div>
+                    <div>
                         <button style={btnStyle} onClick={this.updatePage} value="prev">&lt;prev</button>
-                        <button style={btnStyle} onClick={this.updatePage} value="next">next&gt;</button>
+                        <button style={btnStyle} onClick={this.updatePage} value="next">&gt;next</button>
                     
                     </div>
                     <div style={{padding:"10px"}}>
@@ -162,4 +169,40 @@ const btnStyle = {
     width: "10%"
 }
 
+
+const inputStyle =   {
+    width: "50%",
+    padding: "12px 20px",
+    margin: "8px 0",
+    boxSizing: "border-box",
+    border: "none",
+    borderBottom: "4px solid grey"
+  }
+
+  const selectStyle = {
+    overflow: "hidden",
+    height: "470px", 
+    width: "60%",
+    textAlign: "center", 
+    fontSize: "26px",
+    boxSizing: "border-box",
+    border: "hidden"
+  }
+
+  const optionStyle = {
+    padding: "8px", 
+    outlineStyle:"solid 1px", 
+    backgroundColor: "#D0D0D0"
+  }
+
+  const pageButtonStyle = {
+    textDecoration: "none",
+   display: "inline-block",
+   padding: "10px",
+   fontSize: "26px",
+   width: "3%",
+   textAlign: "center",
+   borderRadius: "100%"
+}
+  
 export default Batches
