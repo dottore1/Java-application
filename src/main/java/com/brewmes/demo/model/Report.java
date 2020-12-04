@@ -114,8 +114,11 @@ public class Report {
         preface.add(new Paragraph("Batch Report", titleFont));
         addEmptyLine(preface, 1);
 
-        // Write batch i d
+        // Write batch id
         preface.add(new Paragraph("Batch id: " + currentBatch.getId(), textFontBold));
+
+        // Write machine id
+        preface.add(new Paragraph("Machine id: " + currentBatch.getMachineId(), textFontBold));
 
         // Create a timestamp for report created
         preface.add(new Paragraph("The report is generated at: " + new Date(), textFontBold));

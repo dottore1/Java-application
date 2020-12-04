@@ -45,6 +45,7 @@ export class MachineList extends Component {
     }
 
     addMachineHandler = (e) =>{
+        e.preventDefault(); 
         let data = {ip: this.state.machineIP};
 
         fetch("http://localhost:8080/api/machines/",{

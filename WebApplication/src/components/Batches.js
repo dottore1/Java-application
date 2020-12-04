@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Icon } from '@iconify/react-with-api';
 
 export class Batches extends Component {
     //State contains all the variables of the class
@@ -195,14 +194,4 @@ const inputStyle =   {
     backgroundColor: "#D0D0D0"
   }
 
-  const pageButtonStyle = {
-    textDecoration: "none",
-   display: "inline-block",
-   padding: "10px",
-   fontSize: "26px",
-   width: "3%",
-   textAlign: "center",
-   borderRadius: "100%"
-}
-  
 export default Batches
