@@ -151,7 +151,7 @@ public class Report {
             }
         }
         dataset.addSeries(series);
-        JFreeChart lineChart = ChartFactory.createXYLineChart("Humidity", "Time", "Humidity"
+        JFreeChart lineChart = ChartFactory.createXYLineChart("Humidity", "Time (s)", "Humidity"
                 , dataset, PlotOrientation.VERTICAL, true, true, false);
         makeTables(document, humidity, width, height, lineChart, currentBatch.getAvgHumidity(), currentBatch.getMinHumidity(), currentBatch.getMaxHumidity(), totalTime);
     }
@@ -180,7 +180,7 @@ public class Report {
             }
         }
         dataset.addSeries(series);
-        JFreeChart lineChart = ChartFactory.createXYLineChart("Vibration", "Time", "Vibration"
+        JFreeChart lineChart = ChartFactory.createXYLineChart("Vibration", "Time (s)", "Vibration"
                 , dataset, PlotOrientation.VERTICAL, true, true, false);
         makeTables(document, vibration, width, height, lineChart, currentBatch.getAvgVibration(), currentBatch.getMinVibration(), currentBatch.getMaxVibration(), totalTime);
     }
@@ -241,7 +241,7 @@ public class Report {
             }
         }
         dataset.addSeries(series);
-        JFreeChart lineChart = ChartFactory.createXYLineChart("Temperature", "Time", "Temperature"
+        JFreeChart lineChart = ChartFactory.createXYLineChart("Temperature", "Time (s)", "Temperature"
                 , dataset, PlotOrientation.VERTICAL, true, true, false);
         makeTables(document, temperature, width, height, lineChart, currentBatch.getAvgTemp(), currentBatch.getMinTemp(), currentBatch.getMaxTemp(), totalTime);
     }
@@ -265,7 +265,7 @@ public class Report {
 
 
         JFreeChart chart = ChartFactory.createBarChart("Time in states", "State",
-                "Time", dataset, PlotOrientation.VERTICAL, false, true, false);
+                "Time (s)", dataset, PlotOrientation.VERTICAL, false, true, false);
 
         PdfContentByte contentByte = pdfWriter.getDirectContent();
         PdfTemplate template = contentByte.createTemplate(width, height);
