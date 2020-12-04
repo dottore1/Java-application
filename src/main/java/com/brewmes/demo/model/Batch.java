@@ -328,7 +328,7 @@ public class Batch {
     public double calculateOee() {
         double goodCount = this.acceptableProducts;
         double idealCycleTime = 1.0 / (double)BeerType.valueOfLabel(this.productType).maxSpeed;
-        double plannedProductionTime = 1.0/ (this.machineSpeed / (double)totalProducts);
+        double plannedProductionTime = (1.0 / this.machineSpeed) * (double)this.totalProducts;
 
         BigDecimal bd = BigDecimal.valueOf((((goodCount * idealCycleTime) / plannedProductionTime)*100));
         bd = bd.round(new MathContext(5));
