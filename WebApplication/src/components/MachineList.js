@@ -98,7 +98,7 @@ export class MachineList extends Component {
         return (
             <div>
                 <form>
-                    <input placeholder = "opc.tcp://<ip adress>:<port>" value = {this.state.machineIP} onChange = {this.ipChanged} style={inputStyle}></input>
+                    <input placeholder = "opc.tcp://<ip address>:<port>" value = {this.state.machineIP} onChange = {this.ipChanged} style={inputStyle}></input>
                     <button onClick={this.addMachineHandler} style={btnStyle}>Add machine</button>
                 </form>
                 {errorMessage}

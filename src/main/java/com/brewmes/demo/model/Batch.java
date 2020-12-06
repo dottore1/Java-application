@@ -17,7 +17,7 @@ public class Batch {
 
     //specifies that this field is a ID and a primary key.
     @Id
-    //Specifies the collumn to map the field value to.
+    //Specifies the column to map the field value to.
     @Column(name = "id")
     private UUID id;
 

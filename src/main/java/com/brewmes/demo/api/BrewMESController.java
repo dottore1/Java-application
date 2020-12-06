@@ -95,7 +95,7 @@ public class BrewMESController {
             case "stout" -> brewMes.setMachineVariables(speed * 150 / 100, BeerType.STOUT, batchSize, id);
             case "ipa" -> brewMes.setMachineVariables(speed * 200 / 100, BeerType.IPA, batchSize, id);
             case "ale" -> brewMes.setMachineVariables(speed, BeerType.ALE, batchSize, id);
-            case "alcohol_free" -> brewMes.setMachineVariables(speed * 125 / 100, BeerType.ALCHOL_FREE, batchSize, id);
+            case "alcohol_free" -> brewMes.setMachineVariables(speed * 125 / 100, BeerType.ALCOHOL_FREE, batchSize, id);
             default -> new ResponseEntity<>(new StringResponse("I do not know that beer type.", HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
         }
         return response;
@@ -121,7 +121,7 @@ public class BrewMESController {
 
     /**
      * returns ResponseEntity containing a InputStreamResource with the pdf file
-     * coresponding to the filename.
+     * corresponding to the filename.
      *
      * @param id the id on the id to be generated
      * @return ResponseEntity with InputStreamResource containing the file

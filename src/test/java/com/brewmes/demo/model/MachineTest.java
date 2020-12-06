@@ -85,7 +85,7 @@ class MachineTest {
     }
 
     @Test
-    void readbatchSize() {
+    void readBatchSize() {
         assertTrue(machine.readBatchSize() >= 0);
     }
 

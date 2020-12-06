@@ -9,7 +9,7 @@ public enum BeerType {
     IPA(2, 150),
     STOUT(3, 200),
     ALE(4, 100),
-    ALCHOL_FREE(5, 125);
+    ALCOHOL_FREE(5, 125);
 
     private static final Map<Integer, BeerType> BY_LABEL = new HashMap<>();
 
