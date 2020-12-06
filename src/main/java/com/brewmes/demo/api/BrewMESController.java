@@ -92,8 +92,8 @@ public class BrewMESController {
         switch (beerType) {
             case "pilsner" -> brewMes.setMachineVariables(speed * 600 / 100, BeerType.PILSNER, batchSize, id);
             case "wheat" -> brewMes.setMachineVariables(speed * 300 / 100, BeerType.WHEAT, batchSize, id);
-            case "stout" -> brewMes.setMachineVariables(speed * 150 / 100, BeerType.STOUT, batchSize, id);
-            case "ipa" -> brewMes.setMachineVariables(speed * 200 / 100, BeerType.IPA, batchSize, id);
+            case "ipa" -> brewMes.setMachineVariables(speed * 150 / 100, BeerType.IPA, batchSize, id);
+            case "stout" -> brewMes.setMachineVariables(speed * 200 / 100, BeerType.STOUT, batchSize, id);
             case "ale" -> brewMes.setMachineVariables(speed, BeerType.ALE, batchSize, id);
             case "alcohol_free" -> brewMes.setMachineVariables(speed * 125 / 100, BeerType.ALCOHOL_FREE, batchSize, id);
             default -> new ResponseEntity<>(new StringResponse("I do not know that beer type.", HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
