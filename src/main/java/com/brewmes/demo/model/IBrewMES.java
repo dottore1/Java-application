@@ -19,8 +19,6 @@ public interface IBrewMES {
 
     Map<UUID, Machine> getMachines();
 
-    String getMachineVariables();
-
     Map<String, Object> getBatchesPage(int page, int size);
 
 }

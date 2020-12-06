@@ -26,12 +26,9 @@ public class BrewMES implements IBrewMES {
     //Repository injected by Spring
     @Autowired
     private MachineRepository machineRepo;
-
     @Autowired
     private BatchRepository batchRepo;
     private Map<UUID, Machine> machines;
-    private Batch selectedBatch;
-    private List<Batch> latestBatches;
     private Thread batchSaveThread;
 
     public Batch getBatch(UUID id) {
@@ -176,10 +173,6 @@ public class BrewMES implements IBrewMES {
         machines.get(id).controlMachine(command);
     }
 
-    public String getMachineVariables() {
-        throw new UnsupportedOperationException();
-    }
-
     /**
      * Finds all machines in the database and updates the Map machines.
      *
@@ -198,25 +191,4 @@ public class BrewMES implements IBrewMES {
 
         return machines;
     }
-
-    public void setMachines(Map<UUID, Machine> machines) {
-        this.machines = machines;
-    }
-
-    public Batch getSelectedBatch() {
-        return selectedBatch;
-    }
-
-    public void setSelectedBatch(Batch selectedBatch) {
-        this.selectedBatch = selectedBatch;
-    }
-
-    public List<Batch> getLatestBatches() {
-        return latestBatches;
-    }
-
-    public void setLatestBatches(List<Batch> latestBatches) {
-        this.latestBatches = latestBatches;
-    }
-
 }

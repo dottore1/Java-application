@@ -336,25 +336,13 @@ public class Machine {
         }
     }
 
-    public String makeJsonVariables() {
-        throw new UnsupportedOperationException();
-    }
-
     public UUID getId() {
         return id;
     }
 
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public String getIp() {
         return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
     }
 
     public Batch getCurrentBatch() {
