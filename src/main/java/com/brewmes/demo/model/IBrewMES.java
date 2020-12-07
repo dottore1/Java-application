@@ -5,9 +5,9 @@ import java.util.UUID;
 
 public interface IBrewMES {
 
-    void controlMachine(Command command, UUID id);
+    void controlMachine(String command, UUID id);
 
-    void setMachineVariables(int speed, BeerType beerType, int batchSize, UUID id);
+    void setMachineVariables(int speed, String beerType, int batchSize, UUID id);
 
     Batch getBatch(UUID id);
 

@@ -1,6 +1,6 @@
 package com.brewmes.demo.api;
 
-import com.brewmes.demo.model.*;
+import com.brewmes.demo.model.IBrewMES;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,13 +56,10 @@ public class BrewMESController {
         JsonObject o = JsonParser.parseString(input).getAsJsonObject();
         String s = o.get("command").getAsString();
         ResponseEntity<Object> response = new ResponseEntity<>(new StringResponse("command updated", HttpStatus.OK.value()), HttpStatus.OK);
-        switch (s) {
-            case "start" -> brewMes.getMachines().get(id).controlMachine(Command.START);
-            case "stop" -> brewMes.getMachines().get(id).controlMachine(Command.STOP);
-            case "reset" -> brewMes.getMachines().get(id).controlMachine(Command.RESET);
-            case "abort" -> brewMes.getMachines().get(id).controlMachine(Command.ABORT);
-            case "clear" -> brewMes.getMachines().get(id).controlMachine(Command.CLEAR);
-            default -> response = new ResponseEntity<>(new StringResponse("I did not understand that.", HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+        if ("start".equals(s) || "abort".equals(s) || "reset".equals(s) || "clear".equals(s) || "stop".equals(s)) {
+            brewMes.controlMachine(s, id);
+        } else {
+            response = new ResponseEntity<>(new StringResponse("I did not understand that.", HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
         }
         return response;
     }
@@ -90,12 +87,12 @@ public class BrewMESController {
         int batchSize = o.get("batchSize").getAsInt();
         ResponseEntity<Object> response = new ResponseEntity<>(new StringResponse("Variables set.", HttpStatus.OK.value()), HttpStatus.OK);
         switch (beerType) {
-            case "pilsner" -> brewMes.setMachineVariables(speed * 600 / 100, BeerType.PILSNER, batchSize, id);
-            case "wheat" -> brewMes.setMachineVariables(speed * 300 / 100, BeerType.WHEAT, batchSize, id);
-            case "ipa" -> brewMes.setMachineVariables(speed * 150 / 100, BeerType.IPA, batchSize, id);
-            case "stout" -> brewMes.setMachineVariables(speed * 200 / 100, BeerType.STOUT, batchSize, id);
-            case "ale" -> brewMes.setMachineVariables(speed, BeerType.ALE, batchSize, id);
-            case "alcohol_free" -> brewMes.setMachineVariables(speed * 125 / 100, BeerType.ALCOHOL_FREE, batchSize, id);
+            case "pilsner" -> brewMes.setMachineVariables(speed * 600 / 100, beerType, batchSize, id);
+            case "wheat" -> brewMes.setMachineVariables(speed * 300 / 100, beerType, batchSize, id);
+            case "ipa" -> brewMes.setMachineVariables(speed * 150 / 100, beerType, batchSize, id);
+            case "stout" -> brewMes.setMachineVariables(speed * 200 / 100, beerType, batchSize, id);
+            case "ale" -> brewMes.setMachineVariables(speed, beerType, batchSize, id);
+            case "alcohol_free" -> brewMes.setMachineVariables(speed * 125 / 100, beerType, batchSize, id);
             default -> new ResponseEntity<>(new StringResponse("I do not know that beer type.", HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
         }
         return response;
