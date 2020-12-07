@@ -7,6 +7,7 @@ import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
 import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
+import org.eclipse.milo.opcua.stack.core.util.EndpointUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -112,9 +113,12 @@ public class BrewMES implements IBrewMES {
         //get all endpoints from the machine
         List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(ipAddress).get();
 
+        String[] ipAddressArray = ipAddress.split(":");
+        EndpointDescription configPoint = EndpointUtil.updateUrl(endpoints.get(0), ipAddressArray[1].substring(2), Integer.parseInt(ipAddressArray[2]));
+
         //loading endpoints into configuration
         OpcUaClientConfigBuilder cfg = new OpcUaClientConfigBuilder();
-        cfg.setEndpoint(endpoints.get(0));
+        cfg.setEndpoint(configPoint);
 
         //setting up machine client with config
         OpcUaClient connection = OpcUaClient.create(cfg.build());
