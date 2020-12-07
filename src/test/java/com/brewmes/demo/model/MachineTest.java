@@ -25,14 +25,6 @@ class MachineTest {
         machine = brewMES.getMachines().get(machines[0].getId());
     }
 
-    //Only run when the machine is is not connected
-    /*
-    @Test
-    void read_process_count_when_machine_not_connected() {
-        assertEquals(-1, machine.readProcessedCount());
-    }
-    */
-
     @Test
     void readProcessCount() {
         assertTrue(machine.readProcessedCount() >= 0);
@@ -93,7 +85,7 @@ class MachineTest {
     }
 
     @Test
-    void readbatchSize() {
+    void readBatchSize() {
         assertTrue(machine.readBatchSize() >= 0);
     }
 

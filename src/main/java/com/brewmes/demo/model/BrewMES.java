@@ -7,30 +7,29 @@ import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
 import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
-
+import org.eclipse.milo.opcua.stack.core.util.EndpointUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 @Service
 //@Transactional
-public class BrewMES implements iBrewMES {
+public class BrewMES implements IBrewMES {
 
     //Repository injected by Spring
     @Autowired
     private MachineRepository machineRepo;
-
     @Autowired
     private BatchRepository batchRepo;
     private Map<UUID, Machine> machines;
-    private Batch selectedBatch;
-    private List<Batch> latestBatches;
     private Thread batchSaveThread;
 
     public Batch getBatch(UUID id) {
@@ -45,8 +44,8 @@ public class BrewMES implements iBrewMES {
         return batch;
     }
 
-    public void getReport(Batch batch) {
-        throw new UnsupportedOperationException();
+    public void generateReport(Batch batch) {
+        Report.generatePDF(batch);
     }
 
     /**
@@ -94,13 +93,13 @@ public class BrewMES implements iBrewMES {
         }
         return false;
     }
-    public Map<String, Object> getBatchesPage(int page, int size){
-        List<Batch> batches = new ArrayList<>();
+
+    public Map<String, Object> getBatchesPage(int page, int size) {
         Pageable paging = PageRequest.of(page, size);
 
         Page<Batch> pageBatch = batchRepo.findAll(paging);
 
-        batches = pageBatch.getContent();
+        List<Batch> batches = pageBatch.getContent();
         Map<String, Object> response = new HashMap<>();
         response.put("batches", batches);
         response.put("currentPage", pageBatch.getNumber());
@@ -114,9 +113,12 @@ public class BrewMES implements iBrewMES {
         //get all endpoints from the machine
         List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(ipAddress).get();
 
+        String[] ipAddressArray = ipAddress.split(":");
+        EndpointDescription configPoint = EndpointUtil.updateUrl(endpoints.get(0), ipAddressArray[1].substring(2), Integer.parseInt(ipAddressArray[2]));
+
         //loading endpoints into configuration
         OpcUaClientConfigBuilder cfg = new OpcUaClientConfigBuilder();
-        cfg.setEndpoint(endpoints.get(0));
+        cfg.setEndpoint(configPoint);
 
         //setting up machine client with config
         OpcUaClient connection = OpcUaClient.create(cfg.build());
@@ -140,31 +142,23 @@ public class BrewMES implements iBrewMES {
      * Makes a single thread that loops through all the machines and saves their batch to the database if the state of the machine is 17
      */
     private void makeBatchSaveThread() {
-        if(batchSaveThread == null) {
+        if (batchSaveThread == null) {
 
-            batchSaveThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (true) {
-                        for (Machine machine : machines.values()) {
-                            if (machine.getCurrentState() == 17) {
-                                if (machine.getCurrentBatch() != null) {
-                                    if (!machine.getCurrentBatch().isSaved()) {
-                                        machine.setCurrentBatch(batchRepo.save(machine.getCurrentBatch()));
-                                        machine.getCurrentBatch().setSaved(true);
-                                    }
-                                }
-
-                            }
+            batchSaveThread = new Thread(() -> {
+                while (true) {
+                    for (Machine machine : machines.values()) {
+                        if (machine.getCurrentState() == 17 && machine.getCurrentBatch() != null && !machine.getCurrentBatch().isSaved()) {
+                            machine.setCurrentBatch(batchRepo.save(machine.getCurrentBatch()));
+                            machine.getCurrentBatch().setSaved(true);
                         }
+                    }
 
-                        try {
-                            Thread.currentThread().sleep(5000);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                            batchSaveThread = null;
-                            e.printStackTrace();
-                        }
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        batchSaveThread = null;
+                        e.printStackTrace();
                     }
                 }
             });
@@ -174,17 +168,13 @@ public class BrewMES implements iBrewMES {
         }
     }
 
-    public void setMachineVariables(int speed, BeerType beerType, int batchSize, UUID id) {
-        machines.get(id).setVariables(speed, beerType, batchSize);
+    public void setMachineVariables(int speed, String beerType, int batchSize, UUID id) {
+        machines.get(id).setVariables(speed, BeerType.valueOf(beerType.toUpperCase()), batchSize);
     }
 
     //Parsing the command to the current selected machine.
-    public void controlMachine(Command command, UUID id) {
-        machines.get(id).controlMachine(command);
-    }
-
-    public String getMachineVariables() {
-        throw new UnsupportedOperationException();
+    public void controlMachine(String command, UUID id) {
+        machines.get(id).controlMachine(Command.valueOf(command.toUpperCase()));
     }
 
     /**
@@ -205,25 +195,4 @@ public class BrewMES implements iBrewMES {
 
         return machines;
     }
-
-    public void setMachines(Map<UUID, Machine> machines) {
-        this.machines = machines;
-    }
-
-    public Batch getSelectedBatch() {
-        return selectedBatch;
-    }
-
-    public void setSelectedBatch(Batch selectedBatch) {
-        this.selectedBatch = selectedBatch;
-    }
-
-    public List<Batch> getLatestBatches() {
-        return latestBatches;
-    }
-
-    public void setLatestBatches(List<Batch> latestBatches) {
-        this.latestBatches = latestBatches;
-    }
-
 }

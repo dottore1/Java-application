@@ -1,6 +1,6 @@
 package com.brewmes.demo.api;
 
-//Class for wrapping string responses in a simple object assosiating the http response code.
+//Class for wrapping string responses in a simple object associating the http response code.
 public class StringResponse {
 
     private String response;

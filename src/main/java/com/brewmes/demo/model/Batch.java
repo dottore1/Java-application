@@ -2,12 +2,12 @@ package com.brewmes.demo.model;
 
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
-import java.math.BigDecimal;
 
 
 @Entity
@@ -17,7 +17,7 @@ public class Batch {
 
     //specifies that this field is a ID and a primary key.
     @Id
-    //Specifies the collumn to map the field value to.
+    //Specifies the column to map the field value to.
     @Column(name = "id")
     private UUID id;
 
@@ -102,39 +102,39 @@ public class Batch {
     @Transient
     private boolean saved = false;
 
-    public Batch(UUID id){
+    public Batch(UUID id) {
         this.id = id;
     }
 
-    public Batch(){
+    public Batch() {
 
     }
 
     public void addTemperature(LocalDateTime time, double temp) {
-      		if (temperature == null){
-			temperature = new TreeMap<>();
-		}
-		temperature.put(time, temp);
+        if (temperature == null) {
+            temperature = new TreeMap<>();
+        }
+        temperature.put(time, temp);
     }
 
     public void addVibration(LocalDateTime time, double vibration) {
-      		if (this.vibration == null){
-			this.vibration = new TreeMap<>();
-		}
-		this.vibration.put(time, vibration);
+        if (this.vibration == null) {
+            this.vibration = new TreeMap<>();
+        }
+        this.vibration.put(time, vibration);
     }
 
     public void addHumidity(LocalDateTime time, double humidity) {
-		if (this.humidity == null) {
-			this.humidity = new TreeMap<>();
-		}
-		this.humidity.put(time , humidity);
+        if (this.humidity == null) {
+            this.humidity = new TreeMap<>();
+        }
+        this.humidity.put(time, humidity);
     }
 
     public void setTimeInState(int state, double seconds) {
-      		if (timeInStates == null) {
-			timeInStates = new TreeMap<>();
-		}
+        if (timeInStates == null) {
+            timeInStates = new TreeMap<>();
+        }
         if (timeInStates.get(state) == null) {
             timeInStates.put(state, seconds);
         } else {
@@ -157,21 +157,27 @@ public class Batch {
     private double findAvgVibration() {
         return vibration.values().stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
     }
+
     private double findMaxTemp() {
         return temperature.values().stream().mapToDouble(Double::doubleValue).max().orElse(0.0);
     }
+
     private double findMaxVibration() {
         return vibration.values().stream().mapToDouble(Double::doubleValue).max().orElse(0.0);
     }
+
     private double findMaxHumidity() {
         return humidity.values().stream().mapToDouble(Double::doubleValue).max().orElse(0.0);
     }
+
     private double findMinTemp() {
         return temperature.values().stream().mapToDouble(Double::doubleValue).min().orElse(0.0);
     }
+
     private double findMinVibration() {
         return vibration.values().stream().mapToDouble(Double::doubleValue).min().orElse(0.0);
     }
+
     private double findMinHumidity() {
         return humidity.values().stream().mapToDouble(Double::doubleValue).min().orElse(0.0);
     }
@@ -181,13 +187,14 @@ public class Batch {
         setAvgTemp(findAvgTemp());
         setAvgVibration(findAvgVibration());
     }
+
     public void setMaxes() {
         setMaxTemp(findMaxTemp());
         setMaxVibration(findMaxVibration());
         setMaxHumidity(findMaxHumidity());
     }
 
-    public void setMinimums(){
+    public void setMinimums() {
         setMinTemp(findMinTemp());
         setMinVibration(findMinVibration());
         setMinHumidity(findMinHumidity());
@@ -199,6 +206,10 @@ public class Batch {
 
     public UUID getMachineId() {
         return machineId;
+    }
+
+    public void setMachineId(UUID machineId) {
+        this.machineId = machineId;
     }
 
     public int getProductType() {
@@ -313,33 +324,22 @@ public class Batch {
         return avgVibration;
     }
 
-    public double getMachineSpeed() {
-        return machineSpeed;
+    public void setAvgVibration(double avgVibration) {
+        this.avgVibration = avgVibration;
     }
 
     public void setMachineSpeed(double machineSpeed) {
         this.machineSpeed = machineSpeed;
     }
 
-    public void setAvgVibration(double avgVibration) {
-        this.avgVibration = avgVibration;
-    }
-
     public double calculateOee() {
         double goodCount = this.acceptableProducts;
-        double idealCycleTime = 1.0 / (double)BeerType.valueOfLabel(this.productType).maxSpeed;
-        double plannedProductionTime = (1.0 / this.machineSpeed) * (double)this.totalProducts;
+        double idealCycleTime = 1.0 / (double) BeerType.valueOfLabel(this.productType).maxSpeed;
+        double plannedProductionTime = (1.0 / this.machineSpeed) * (double) this.totalProducts;
 
-        BigDecimal bd = BigDecimal.valueOf((((goodCount * idealCycleTime) / plannedProductionTime)*100));
+        BigDecimal bd = BigDecimal.valueOf((((goodCount * idealCycleTime) / plannedProductionTime) * 100));
         bd = bd.round(new MathContext(5));
         return bd.doubleValue();
-    }
-
-    public Batch(int acceptableProducts, int productType, double machineSpeed, int totalProducts){
-        this.acceptableProducts = acceptableProducts;
-        this.productType = productType;
-        this.machineSpeed = machineSpeed;
-        this.totalProducts = totalProducts;
     }
 
     public Map<Integer, Double> getTimeInStates() {
@@ -360,10 +360,6 @@ public class Batch {
 
     public void setProcessedProducts(int processedProducts) {
         this.processedProducts = processedProducts;
-    }
-
-    public void setMachineId(UUID machineId) {
-        this.machineId = machineId;
     }
 
     public boolean isSaved() {

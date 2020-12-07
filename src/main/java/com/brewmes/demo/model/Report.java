@@ -91,23 +91,21 @@ public class Report {
             addTemperatureSection(document);
 
             document.close();
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
+        } catch (DocumentException|FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    private static void addOEESection(Document document) throws DocumentException{
-        Paragraph OEE = new Paragraph();
+    private static void addOEESection(Document document) throws DocumentException {
+        Paragraph oee = new Paragraph();
 
-        addEmptyLine(OEE, 1);
+        addEmptyLine(oee, 1);
 
-        OEE.add(new Paragraph("The Overall Equipment Effectiveness (OEE) of the batch is: " + currentBatch.calculateOee() + "%"));
+        oee.add(new Paragraph("The Overall Equipment Effectiveness (OEE) of the batch is: " + currentBatch.calculateOee() + "%"));
 
-        addEmptyLine(OEE, 1);
+        addEmptyLine(oee, 1);
 
-        document.add(OEE);
+        document.add(oee);
     }
 
     private static void addTitlePage(Document document) throws DocumentException {
@@ -116,8 +114,11 @@ public class Report {
         preface.add(new Paragraph("Batch Report", titleFont));
         addEmptyLine(preface, 1);
 
-        // Write batch i d
+        // Write batch id
         preface.add(new Paragraph("Batch id: " + currentBatch.getId(), textFontBold));
+
+        // Write machine id
+        preface.add(new Paragraph("Machine id: " + currentBatch.getMachineId(), textFontBold));
 
         // Create a timestamp for report created
         preface.add(new Paragraph("The report is generated at: " + new Date(), textFontBold));

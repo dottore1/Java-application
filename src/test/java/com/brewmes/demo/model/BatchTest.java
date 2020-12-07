@@ -1,9 +1,8 @@
-package com.BrewMES.demo.model;
+package com.brewmes.demo.model;
 
-import com.brewmes.demo.model.Batch;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BatchTest {
 
