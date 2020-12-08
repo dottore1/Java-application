@@ -192,8 +192,8 @@ public class Report {
         NumberAxis range = (NumberAxis) lineChart.getXYPlot().getRangeAxis();
         domain.setTickUnit(new NumberTickUnit(totalTime / 10));
         domain.setRange(0, totalTime);
-        range.setRange(0, max);
-        range.setTickUnit(new NumberTickUnit(max / 2));
+        range.setRange((min-1), (max + 1));
+        range.setTickUnit(new NumberTickUnit((max + 1) / 2));
 
         PdfContentByte contentByte = pdfWriter.getDirectContent();
         PdfTemplate template = contentByte.createTemplate(width, height);

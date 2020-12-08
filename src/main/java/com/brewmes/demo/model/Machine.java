@@ -541,7 +541,7 @@ public class Machine {
         if (this.currentState != 17) {
             currentBatch.addHumidity(LocalDateTime.now(), this.humidity);
             currentBatch.addVibration(LocalDateTime.now(), this.vibration);
-            currentBatch.addTemperature(LocalDateTime.now(), this.vibration);
+            currentBatch.addTemperature(LocalDateTime.now(), this.temperature);
 
             currentBatch.setTotalProducts(this.amountToProduce);
             currentBatch.setProcessedProducts(this.totalProducts);
