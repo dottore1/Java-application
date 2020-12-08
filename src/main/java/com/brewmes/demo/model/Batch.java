@@ -5,6 +5,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -119,7 +120,7 @@ public class Batch {
 
     public void addVibration(LocalDateTime time, double vibration) {
         if (this.vibration == null) {
-            this.vibration = new TreeMap<>();
+            this.vibration = new TreeMap<>((o1, o2) -> (int) (o1.toEpochSecond(ZoneOffset.UTC) - o2.toEpochSecond(ZoneOffset.UTC)));
         }
         this.vibration.put(time, vibration);
     }

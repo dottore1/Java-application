@@ -11,7 +11,6 @@ import com.itextpdf.text.pdf.PdfWriter;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeries;
@@ -25,6 +24,7 @@ import java.io.FileOutputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.TreeMap;
 
 public class Report {
     private static final Font titleFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
@@ -91,7 +91,7 @@ public class Report {
             addTemperatureSection(document);
 
             document.close();
-        } catch (DocumentException|FileNotFoundException e) {
+        } catch (DocumentException | FileNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -170,14 +170,18 @@ public class Report {
         long totalTime = 0L;
         if (currentBatch.getVibration().keySet().stream().findFirst().isPresent()) {
             LocalDateTime startTime;
-            startTime = currentBatch.getVibration().keySet().stream().findFirst().get();
-            for (LocalDateTime time : currentBatch.getVibration().keySet()) {
-                long timeElapsed = Math.abs(startTime.toEpochSecond(ZoneOffset.MAX) - time.toEpochSecond(ZoneOffset.MAX));
+
+            //explicit cast to a sortedMap, so it's sorted on timestamp
+            TreeMap<LocalDateTime, Double> sortedMap = new TreeMap<>(currentBatch.getVibration());
+            sortedMap.putAll(currentBatch.getVibration());
+
+            startTime = sortedMap.keySet().stream().findFirst().get();
+            for (LocalDateTime time : sortedMap.keySet()) {
+                long timeElapsed = Math.abs(startTime.toEpochSecond(ZoneOffset.UTC) - time.toEpochSecond(ZoneOffset.UTC));
                 if (totalTime < timeElapsed) {
                     totalTime = timeElapsed;
                 }
-
-                series.add((Number) (Math.abs(startTime.toEpochSecond(ZoneOffset.MAX) - time.toEpochSecond(ZoneOffset.MAX))), currentBatch.getVibration().get(time));
+                series.add((Number) (time.toEpochSecond(ZoneOffset.UTC) - startTime.toEpochSecond(ZoneOffset.UTC)), currentBatch.getVibration().get(time));
             }
         }
         dataset.addSeries(series);
@@ -190,10 +194,10 @@ public class Report {
 
         NumberAxis domain = (NumberAxis) lineChart.getXYPlot().getDomainAxis();
         NumberAxis range = (NumberAxis) lineChart.getXYPlot().getRangeAxis();
-        domain.setTickUnit(new NumberTickUnit(totalTime / 10));
-        domain.setRange(0, totalTime);
-        range.setRange((min-1), (max + 1));
-        range.setTickUnit(new NumberTickUnit((max + 1) / 2));
+//        domain.setTickUnit(new NumberTickUnit(totalTime / 10));
+//        domain.setRange(0, totalTime);
+//        range.setRange((min-1), (max + 1));
+//        range.setTickUnit(new NumberTickUnit((max + 1) / 2));
 
         PdfContentByte contentByte = pdfWriter.getDirectContent();
         PdfTemplate template = contentByte.createTemplate(width, height);
