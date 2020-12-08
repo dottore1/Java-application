@@ -115,19 +115,19 @@ export class Liveview extends Component {
                     <div style={{padding: "0px 25px"}}>
                         <Icon icon="carbon-humidity" style={{width: "80px", height: "80px", color: "#42a7f5"}}/>
                         <p>Humidity</p>
-                        <h1>{this.state.livedata.humidity}</h1>
+                        <h1>{Math.round(this.state.livedata.humidity)}</h1>
                     </div>
 
                     <div style={{padding: "0px 25px"}}>
                         <Icon icon="ph-vibrate" style={{width: "80px", height: "80px"}}/>
                         <p>Vibration</p>
-                        <h1>{this.state.livedata.vibration}</h1>
+                        <h1>{Math.round(this.state.livedata.vibration)}</h1>
                     </div>
 
                     <div style={{padding: "0px 25px"}}>
                         <Icon icon="emojione-v1:thermometer" style={{width: "80px", height: "80px"}}/>
                         <p>Temperature</p>
-                        <h1>{this.state.livedata.temperature}</h1>
+                        <h1>{Math.round(this.state.livedata.temperature)}</h1>
                     </div>
                     <div style={{padding: "0px 25px"}}>
                         <Icon icon="cil-speedometer" style={{width: "80px", height: "80px"}}/>
