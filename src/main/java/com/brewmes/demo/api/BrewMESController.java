@@ -82,7 +82,7 @@ public class BrewMESController {
     @PutMapping(value = "/machines/{id}/variables")
     public ResponseEntity<Object> setMachineVariables(@PathVariable("id") UUID id, @RequestBody String input) {
         JsonObject o = JsonParser.parseString(input).getAsJsonObject();
-        int speed = o.get("speed").getAsInt();
+        double speed = o.get("speed").getAsDouble();
         String beerType = o.get("beerType").getAsString();
         int batchSize = o.get("batchSize").getAsInt();
         ResponseEntity<Object> response = new ResponseEntity<>(new StringResponse("Variables set.", HttpStatus.OK.value()), HttpStatus.OK);

@@ -168,7 +168,7 @@ public class BrewMES implements IBrewMES {
         }
     }
 
-    public void setMachineVariables(int speed, String beerType, int batchSize, UUID id) {
+    public void setMachineVariables(double speed, String beerType, int batchSize, UUID id) {
         machines.get(id).setVariables(speed, BeerType.valueOf(beerType.toUpperCase()), batchSize);
     }
 
