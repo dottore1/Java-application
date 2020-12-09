@@ -317,7 +317,7 @@ public class Machine {
      * @param beerType  the beer type for the machine.
      * @param batchSize the amount of beer to produce until stopping
      */
-    public void setVariables(int speed, BeerType beerType, int batchSize) {
+    public void setVariables(double speed, BeerType beerType, int batchSize) {
         try {
             //Set beertype on the machine
             NodeId setBeerType = new NodeId(6, "::Program:Cube.Command.Parameter[1].Value");
@@ -541,7 +541,7 @@ public class Machine {
         if (this.currentState != 17) {
             currentBatch.addHumidity(LocalDateTime.now(), this.humidity);
             currentBatch.addVibration(LocalDateTime.now(), this.vibration);
-            currentBatch.addTemperature(LocalDateTime.now(), this.vibration);
+            currentBatch.addTemperature(LocalDateTime.now(), this.temperature);
 
             currentBatch.setTotalProducts(this.amountToProduce);
             currentBatch.setProcessedProducts(this.totalProducts);

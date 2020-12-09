@@ -7,7 +7,7 @@ public interface IBrewMES {
 
     void controlMachine(String command, UUID id);
 
-    void setMachineVariables(int speed, String beerType, int batchSize, UUID id);
+    void setMachineVariables(double speed, String beerType, int batchSize, UUID id);
 
     Batch getBatch(UUID id);
 
