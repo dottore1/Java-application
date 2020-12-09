@@ -60,12 +60,12 @@ public class Report {
             table.addCell("Acceptable products");
             table.addCell("Defect products");
             table.addCell("Machine speed");
-            table.addCell(String.valueOf(batch.getProductType()));
+            table.addCell(String.valueOf(BeerType.valueOfLabel(batch.getProductType())).toLowerCase().replace("_", " "));
             table.addCell(String.valueOf(batch.getTotalProducts()));
             table.addCell(String.valueOf(batch.getTotalProducts()));
             table.addCell(String.valueOf(batch.getAcceptableProducts()));
             table.addCell(String.valueOf(batch.getDefectProducts()));
-            table.addCell(String.valueOf(batch.getNormalizedMachineSpeed()));
+            table.addCell(String.format("%.2f", batch.getNormalizedMachineSpeed()));
             // Add table to document
             document.add(table);
 
@@ -141,14 +141,16 @@ public class Report {
         long totalTime = 0L;
         if (currentBatch.getHumidity().keySet().stream().findFirst().isPresent()) {
             LocalDateTime startTime;
-            startTime = currentBatch.getHumidity().keySet().stream().findFirst().get();
+            //explicit cast to a sortedMap, so it's sorted on timestamp
+            TreeMap<LocalDateTime, Double> sortedMap = new TreeMap<>(currentBatch.getHumidity());
 
+            startTime = sortedMap.keySet().stream().findFirst().get();
             for (LocalDateTime time : currentBatch.getHumidity().keySet()) {
                 long timeElapsed = Math.abs(startTime.toEpochSecond(ZoneOffset.MAX) - time.toEpochSecond(ZoneOffset.MAX));
                 if (totalTime < timeElapsed) {
                     totalTime = timeElapsed;
                 }
-                series.add((Number) Math.abs(startTime.toEpochSecond(ZoneOffset.MAX) - time.toEpochSecond(ZoneOffset.MAX)), currentBatch.getHumidity().get(time));
+                series.add((Number) (time.toEpochSecond(ZoneOffset.MAX) - startTime.toEpochSecond(ZoneOffset.MAX)), currentBatch.getHumidity().get(time));
             }
         }
         dataset.addSeries(series);
@@ -173,7 +175,6 @@ public class Report {
 
             //explicit cast to a sortedMap, so it's sorted on timestamp
             TreeMap<LocalDateTime, Double> sortedMap = new TreeMap<>(currentBatch.getVibration());
-            sortedMap.putAll(currentBatch.getVibration());
 
             startTime = sortedMap.keySet().stream().findFirst().get();
             for (LocalDateTime time : sortedMap.keySet()) {
@@ -196,7 +197,7 @@ public class Report {
         NumberAxis range = (NumberAxis) lineChart.getXYPlot().getRangeAxis();
 //        domain.setTickUnit(new NumberTickUnit(totalTime / 10));
 //        domain.setRange(0, totalTime);
-//        range.setRange((min-1), (max + 1));
+        range.setRange((min - 0.5), (max + 0.5));
 //        range.setTickUnit(new NumberTickUnit((max + 1) / 2));
 
         PdfContentByte contentByte = pdfWriter.getDirectContent();
@@ -236,7 +237,11 @@ public class Report {
         long totalTime = 0;
         if (currentBatch.getTemperature().keySet().stream().findFirst().isPresent()) {
             LocalDateTime startTime;
-            startTime = currentBatch.getTemperature().keySet().stream().findFirst().get();
+
+            //explicit cast to a sortedMap, so it's sorted on timestamp
+            TreeMap<LocalDateTime, Double> sortedMap = new TreeMap<>(currentBatch.getVibration());
+
+            startTime = sortedMap.keySet().stream().findFirst().get();
             for (LocalDateTime time : currentBatch.getTemperature().keySet()) {
                 long timeElapsed = Math.abs(startTime.toEpochSecond(ZoneOffset.MAX) - time.toEpochSecond(ZoneOffset.MAX));
                 if (totalTime < timeElapsed) {
