@@ -91,22 +91,22 @@ export class Liveview extends Component {
                     </div>
                     <div style={{padding: "0px 10px"}}>
                         <label for="hops">Hops</label> <br></br>
-                        <progress id="hops" value={this.state.livedata.barley} max="35000"></progress> <br></br>
+                        <progress id="hops" value={this.state.livedata.hops} max="35000"></progress> <br></br>
                         {this.state.livedata.hops}
                     </div>
                     <div style={{padding: "0px 10px"}}>
                         <label for="malt">Malt</label> <br></br>
-                        <progress id="malt" value={this.state.livedata.barley} max="35000"></progress> <br></br>
+                        <progress id="malt" value={this.state.livedata.malt} max="35000"></progress> <br></br>
                         {this.state.livedata.malt}
                     </div>
                     <div style={{padding: "0px 10px"}}>
                         <label for="wheat">Wheat</label> <br></br>
-                        <progress id="wheat" value={this.state.livedata.barley} max="35000"></progress> <br></br>
+                        <progress id="wheat" value={this.state.livedata.wheat} max="35000"></progress> <br></br>
                         {this.state.livedata.wheat}
                     </div>
                     <div style={{padding: "0px 10px"}}>
                         <label for="yeast">Yeast</label> <br></br>
-                        <progress id="yeast" value={this.state.livedata.barley} max="35000"></progress> <br></br>
+                        <progress id="yeast" value={this.state.livedata.yeast} max="35000"></progress> <br></br>
                         {this.state.livedata.yeast}
                     </div>
                 </div>
