@@ -15,6 +15,6 @@ jobs:
         run: npm install
       - name: Test
         working-directory: ./containerization/
-        run: docker-compose up -d
+        run: docker-compose up -d && sleep 30
       - name:  Testing
         run: docker ps -a
