@@ -7,14 +7,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
-      - name: Use Node.js v10
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14.x
-      - name: Install
-        run: npm install
       - name: Test
         working-directory: ./containerization/
         run: docker-compose up -d && sleep 30
       - name:  Testing
         run: docker ps -a
+      - name: Use Node.js v10
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: run and install test-directory
+        working-directory: ./test
+        run: npm install
+      - name: test
+        run: npm test
