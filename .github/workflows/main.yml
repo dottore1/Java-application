@@ -1,13 +1,17 @@
-build:
-
-runs-on: ubuntu-latest
-steps:
-- uses: actions/checkout@v1
-- name: Build the docker-compose stack
-run: docker-compose up
-- name: Sleep
-uses: jakejarvis/wait-action@master
-with:
-time: '60s'
-- name: Check running containers
-run: docker ps
+name: test-integration
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Use Node.js v10
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - name: Install
+        run: npm install
+      - name: Test
+        run: docker-compose up --exit-code-from web
