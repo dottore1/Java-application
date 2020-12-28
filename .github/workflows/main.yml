@@ -14,4 +14,6 @@ jobs:
       - name: Install
         run: npm install
       - name: Test
-        run: docker-compose up --exit-code-from web
+        run: docker-compose up
+      - name:  Testing
+        run: docker ps -a
