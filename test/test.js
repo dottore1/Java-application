@@ -8,7 +8,7 @@ newman.run({
 }).on('done', (err, summary) => {
     if(err || summary.run.failures.length){
         console.log(err);
-        proces.exit(1);
+        process.exit(1);
     } else{
         process.exit(0);
     }
