@@ -5,14 +5,11 @@ newman.run({
     collection: require('./test_collection.json'),
     reporters: 'cli',
     bail: true
-}, function (err) {
-    if (err) { 
-        errorFlag = true;
-        throw err; 
-    }
-    if(!errorFlag){
-        console.log('collection run complete!');
+}).on('done', (err, summary) => {
+    if(err || summary.run.failures.length){
+        console.log(err);
+        proces.exit(1);
     } else{
-        process.exit(-1);
+        process.exit(0);
     }
 });
